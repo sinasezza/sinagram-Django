@@ -1,0 +1,71 @@
+{% extends "Base/base.html" %}
+
+{% block title %}
+    Signup
+{% endblock title %}
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+{% block content %}
+    <form method="POST" action="" >
+        {% csrf_token %}
+        <!-- <label for="">username : </label>
+        <input type="text" name="username" id="">
+        <br>
+        <label for="">email : </label>
+        <input type="email" name="email" id="">
+        <br>
+        <label for="">first name : </label>
+        <input type="text" name="first_name">
+        <br>
+        <label for="">last name : </label>
+        <input type="text" name="last_name">
+        <br>
+        <label for="">age : </label>
+        <input type="text" name="age">
+        <br>
+        <label for="">ssn : </label>
+        <input type="text" name="ssn">
+        <br>
+        <label for="">picture : </label>
+        <input type="file" id="img" name="picture" accept="image/*"> 
+        <hr>
+        <label for="">phone number : </label>
+        <input type="tel" name="phone_number" id="" required> 
+        <hr>
+        <label for="">password : </label>
+        <input type="text" name="password1">
+        <br>
+        <label for="">confirm password : </label>
+        <input type="text" name="password2">  -->
+
+        {{form.as_p}}
+        
+        <hr><hr>
+        <button type="submit">Signup</button>
+    </form>
+
+    <br><br>
+    <hr>
+    {% if form.errors %}
+        <h1> <u>Something wrong</u> </h1>
+        <div class="alert alert-danger">
+            <ol>
+                {% for field in form %}
+                    {% for error in field.errors %} 
+                        <li style="margin-left:30px;">
+                            <strong style="padding:10px;">{{ error|escape }}.</strong>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
+    <hr>
+    {{ form.non_field_errors }} 
+
+
+
+
+
+{% endblock content %}

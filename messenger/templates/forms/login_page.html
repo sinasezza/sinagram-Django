@@ -1,0 +1,49 @@
+{% extends "Base/base.html" %}
+
+{% block title %}
+    Login
+{% endblock title %}
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+{% block content %}
+    <form method="POST" action="" >
+        {% csrf_token %}
+
+        {{form.as_p}}
+        
+        <hr><hr>
+        <button type="submit">Login</button>
+    </form>
+
+    <br><br>
+    <hr>
+    {% if form.errors %}
+        <h1> <u>Something wrong</u> </h1>
+        <div class="alert alert-danger">
+            <ol>
+                {% for field in form %}
+                    {% for error in field.errors %} 
+                        <li style="margin-left:30px;">
+                            <strong style="padding:10px;">{{ error|escape }}.</strong>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
+    <hr>
+    {{ form.non_field_errors }} 
+
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+
+{% endblock content %}

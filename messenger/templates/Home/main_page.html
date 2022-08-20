@@ -1,0 +1,28 @@
+{% extends "Base/base.html" %}
+{% load static %}
+ 
+{% block title %}
+    Sinagram
+{% endblock title %}
+
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+    <h1> Welcome </h1>
+    <div class="IntroLinks">
+        <h3> <a href="{% url 'messenger:signup' %}"> >Signup </a> </h3>
+        <h3> <a href="{% url 'messenger:login' %}"> >Login </a>  </h3>
+        {% if user.is_authenticated %}
+            <h3>  <a href="{% url 'messenger:logout' %}"> >Logout </a> </h3>
+        {% endif %}
+    </div>
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> {{ message }}
+        </div>
+    {% endfor %}
+{% endblock content %}
