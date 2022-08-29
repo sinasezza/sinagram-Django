@@ -1,28 +1,31 @@
 {% extends "Base/base.html" %}
 {% load static %}
-
-{% block head %}
-    <script src="{% static 'javascript/codes.js' %}"></script> 
-{% endblock head %}
-
+ 
 {% block title %}
-    Login
+    Delete User : {{usr.user.username}}
 {% endblock title %}
+
+
 
 {% comment %} ------------------------------------- {% endcomment %}
 
+
 {% block content %}
-    <form method="POST" action="" >
-        {% csrf_token %}
+    <h3> Do you want to delete your account ({{usr.user.username}})? </h3>
+    <ul>
+        <li style="display: inline-block;margin : 10px;" >
+            <form method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type='submit' value='Yes , Delete My Account' style="background-color=red"> 
+            </form>
+        </li>
+        <li style="display: inline-block;margin : 10px;">
+            <a href="{{usr.get_panel_url}}"><button> No , Back To panel</button></a>
+        </li>
+    </ul>
 
-        {{form.as_p}}
-        
-        <hr><hr>
-        <button type="submit">Login</button>
-    </form>
 
-    <br><br>
-    <hr>
     {% if form.errors %}
         <h1> <u>Something wrong</u> </h1>
         <div class="alert alert-danger">
@@ -37,8 +40,5 @@
             </ol>
         </div>
     {% endif %}
-    <hr>
-    
-
 
 {% endblock content %}

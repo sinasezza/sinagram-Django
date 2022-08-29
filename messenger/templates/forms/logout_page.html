@@ -2,27 +2,35 @@
 {% load static %}
 
 {% block head %}
-    <script src="{% static 'javascript/codes.js' %}"></script> 
-{% endblock head %}
-
+    <script src="{% static 'javascript/codes.js' %}"></script>
+{% endblock %}
+ 
 {% block title %}
-    Login
+    Logout User : {{usr.user.username}}
 {% endblock title %}
+
+
 
 {% comment %} ------------------------------------- {% endcomment %}
 
+
 {% block content %}
-    <form method="POST" action="" >
-        {% csrf_token %}
+    <h3> Do you want to Logout From your account? </h3>
+    <ul>
+        <li style="display: inline-block;margin : 10px;" >
+            <form method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form}}
+                <input type='submit' value='Yes , Logout my account' style="background-color=red"> 
+            </form>
+        </li>
+        <li style="display: inline-block;margin : 10px;">
+            <a href="{% url 'messenger:main_page' %}"><button> No , Back To main page</button></a>
+        </li>
+    </ul>
 
-        {{form.as_p}}
-        
-        <hr><hr>
-        <button type="submit">Login</button>
-    </form>
+    
 
-    <br><br>
-    <hr>
     {% if form.errors %}
         <h1> <u>Something wrong</u> </h1>
         <div class="alert alert-danger">
@@ -37,8 +45,5 @@
             </ol>
         </div>
     {% endif %}
-    <hr>
-    
-
 
 {% endblock content %}

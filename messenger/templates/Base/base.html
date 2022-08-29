@@ -13,7 +13,8 @@
             {% endblock title %}
         </title>
 
-        
+        <script src="{% static 'javascript/codes.js' %}"> </script>
+
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     {% endblock head %}
 </head>
@@ -23,7 +24,7 @@
     {% block content %}
 
     {% endblock content %}
-    {% comment %} {% include "Partials/pagination.html" %} 
-    {% include "Partials/footer.html" %}  {% endcomment %}
+    {% comment %} {% include "Partials/pagination.html" %}  {% endcomment %}
+    {% include "Partials/footer.html" %} 
 </body>
 </html>
