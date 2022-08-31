@@ -48,16 +48,12 @@ def signup_view(request):
             return redirect('messenger:main_page')
         else:
             messages.error(request,'form is not valid')
-            return redirect('messenger:signup')
+            return render(request,'forms/signup_page.html',{'form':form,})
         
     else:
         form = forms.SignupForm()
+        return render(request,'forms/signup_page.html',{'form':form,})
 
-    content = {
-        'form' : form,
-    }
-
-    return render(request,'forms/signup_page.html',content)
 
 # ======================================
 
@@ -116,7 +112,7 @@ def Logout_view(request):
         'usr':usr,
         'form':form ,
     }
-    return render(request,'Forms/logout_page.html',content)
+    return render(request,'forms/logout_page.html',content)
 
 # ======================================
 
@@ -151,11 +147,12 @@ def change_info_view(request,username):
                 account.user.last_name  = cd['new_last_name']
                 account.user.email      = cd['new_email']
                 account.user.save()
+                
                 account.user_phone_number   = cd['new_phone_number']
                 account.user_gender         = cd['new_gender']
                 account.user_age            = cd['new_age']
                 account.user_ssn            = cd.get('new_ssn',account.user_ssn)
-                if request.FILES.get('new_photo',False) is not None:
+                if request.FILES.get('new_photo',None) is not None:
                     account.user_photo          = request.FILES.get('new_photo',False)
                 account.user_about          = cd['new_about']
                 account.save()
@@ -163,13 +160,14 @@ def change_info_view(request,username):
                 login(request,User.objects.get(username__exact=username))
                 messages.success(request,'updated successfully')
                 return redirect(account.get_panel_url())  
-        
+
         else:
             messages.error(request,'form is not valid')
-            return redirect('messenger:change_info',request.user.username)
+            return render(request,'forms/change_info_page.html',{'form':form,})
     
     else:
         form = forms.ChangeInfoForm()
+        form.fields['user_id'].initial = request.user.id
         form.fields['new_username'].initial = account.user.username
         form.fields['new_first_name'].initial = account.user.first_name
         form.fields['new_last_name'].initial = account.user.last_name
@@ -180,11 +178,7 @@ def change_info_view(request,username):
         form.fields['new_ssn'].initial = account.user_ssn
         form.fields['new_photo'].initial = account.user_photo
         form.fields['new_about'].initial = account.user_about
-    
-    content = {
-        'form' : form,
-    }
-    return render(request,'forms/change_info_page.html',content)
+        return render(request,'forms/change_info_page.html',{'form':form,})
 
 # ======================================
 

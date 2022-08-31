@@ -1,10 +1,6 @@
 {% extends "Base/base.html" %}
 {% load static %}
 
-{% block head %}
-    <script src="{% static 'javascript/codes.js' %}"></script> 
-{% endblock head %}
-
 {% block title %}
     Signup
 {% endblock title %}
@@ -15,13 +11,9 @@
 
     <form method="POST" action="" enctype="multipart/form-data">
         {% csrf_token %}
-
         {{form.as_p}}
-        
-        <hr><hr>
+        <hr>
         <button type="submit">Signup</button>
     </form>
-
-    <br>
 
 {% endblock content %}

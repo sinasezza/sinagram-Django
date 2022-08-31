@@ -25,11 +25,15 @@
         <br>
         about : {{usr.user_about}}
         <br>
+        email : {{usr.user.email}}
+        <br>
         {% if usr.user_photo %}
              photo : <img src="{{usr.user_photo.url}}" alt="profile photo" width="150px" height="170px" >
         {% else %}
             photo : There is no photo
         {% endif %}
+        <br>
+        
        
     </div>
 

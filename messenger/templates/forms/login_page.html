@@ -22,22 +22,7 @@
     </form>
 
     <br><br>
-    <hr>
-    {% if form.errors %}
-        <h1> <u>Something wrong</u> </h1>
-        <div class="alert alert-danger">
-            <ol>
-                {% for field in form %}
-                    {% for error in field.errors %} 
-                        <li style="margin-left:30px;">
-                            <strong style="padding:10px;">{{ error|escape }}.</strong>
-                        </li>
-                    {% endfor %}
-                {% endfor %}
-            </ol>
-        </div>
-    {% endif %}
-    <hr>
+
     
 
 

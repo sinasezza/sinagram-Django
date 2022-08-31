@@ -7,7 +7,7 @@ import datetime
 class Account(models.Model):
 
     class Meta:
-        unique_together = ('user','user_phone_number',)
+        unique_together = ('id','user','user_phone_number',)
 
     def user_directory_path(instance, filename):
         year  = datetime.date.today().year
@@ -22,7 +22,7 @@ class Account(models.Model):
         ('female','Female'),
         ('others','Others'),
     }
-    user = models.OneToOneField(get_user_model(),on_delete=models.CASCADE,primary_key=True)
+    user = models.OneToOneField(get_user_model(),on_delete=models.CASCADE)
     # -----------------------------------
     user_age                 = models.PositiveSmallIntegerField(null=True , blank=True , )
     # -----------------------------------
@@ -45,3 +45,4 @@ class Account(models.Model):
     def user_email(self):
         return self.user.email
 
+        
