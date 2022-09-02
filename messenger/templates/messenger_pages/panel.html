@@ -1,17 +1,15 @@
 {% extends "Base/base.html" %}
 
-{% load static %}
- 
 {% block title %}
     {{usr.user.username}}
 {% endblock title %}
-
 
 
 {% comment %} ------------------------------------- {% endcomment %}
 
 
 {% block content %}
+    
     <div class="profile">
         first name : {{usr.user.first_name}}
         <br>
@@ -33,14 +31,11 @@
             photo : There is no photo
         {% endif %}
         <br>
-        
-       
     </div>
 
     <div class="editOptions">
-        <a href="{{usr.get_panel_url}}/change_info">Edit</a> | 
-        <a href="{{usr.get_panel_url}}/delete_user">Delete</a>
+        <a href="{{usr.get_panel_url}}/change-info">Edit</a> | 
+        <a href="{{usr.get_panel_url}}/delete-user">Delete</a>
     </div>
 
-    
 {% endblock content %}

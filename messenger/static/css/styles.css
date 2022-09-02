@@ -6,3 +6,10 @@
     width : 800px;
     text-align: center;
 }
+/* ------------------------- */
+#add_contact {
+    text-align: center;
+    background-color: chocolate;
+    text-shadow: 10px;
+    font-size: larger;
+}

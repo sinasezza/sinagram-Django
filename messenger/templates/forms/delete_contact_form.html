@@ -1,7 +1,7 @@
 {% extends "Base/base.html" %}
 
 {% block title %}
-    Logout User : {{usr.user.username}}
+    {{contact}} | Contacts 
 {% endblock title %}
 
 
@@ -9,20 +9,23 @@
 
 
 {% block content %}
-    <h3> Do you want to Logout From your account? </h3>
+
+    <div>
+
+    <h3> Do you want to delete Contact ({{contact.fullname}})? </h3>
     <ul>
         <li style="display: inline-block;margin : 10px;" >
-            <form method='POST' enctype="multipart/form-data">
+            <form method='POST'>
                 {% csrf_token %}
                 {{form}}
-                <input type='submit' value='Yes , Logout my account' style="background-color=red"> 
+                <input type='submit' value='Yes , Delete Contact' style="background-color=red"> 
             </form>
         </li>
         <li style="display: inline-block;margin : 10px;">
-            <a href="{% url 'messenger:main_page' %}"><button> No , Back To main page</button></a>
+            <a href="{{usr.get_contacts_url}}"><button> No , Back To contacts</button></a>
         </li>
     </ul>
 
-    
+    <div>
 
 {% endblock content %}

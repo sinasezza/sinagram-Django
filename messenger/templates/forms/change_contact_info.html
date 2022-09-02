@@ -1,10 +1,8 @@
 {% extends "Base/base.html" %}
-{% load static %}
- 
-{% block title %}
-    Change info
-{% endblock title %}
 
+{% block title %}
+    Change info | {{contact.fullname}}
+{% endblock title %}
 
 
 {% comment %} ------------------------------------- {% endcomment %}
@@ -12,7 +10,7 @@
 
 {% block content %}
 
-    <form method='POST' enctype="multipart/form-data">
+    <form method='POST'>
         {% csrf_token %}
         {{ form.as_p }}
         <input type='submit' value='update'>

@@ -128,10 +128,10 @@ def panel_view(request,username):
 # ======================================
 
 @login_required(login_url='messenger:login')
-def change_info_view(request,username):
+def change_account_info_view(request,username):
     account = models.Account.objects.get(user__exact = request.user)
     if request.method == 'POST':
-        form = forms.ChangeInfoForm(request.POST,request.FILES)
+        form = forms.AccountChangeInfoForm(request.POST,request.FILES)
         if form.is_valid():    
             cd = form.cleaned_data      
             if not account.user.check_password(cd['old_password']):
@@ -163,10 +163,10 @@ def change_info_view(request,username):
 
         else:
             messages.error(request,'form is not valid')
-            return render(request,'forms/change_info_page.html',{'form':form,})
+            return render(request,'forms/change_account_info.html',{'form':form,})
     
     else:
-        form = forms.ChangeInfoForm()
+        form = forms.AccountChangeInfoForm()
         form.fields['user_id'].initial = request.user.id
         form.fields['new_username'].initial = account.user.username
         form.fields['new_first_name'].initial = account.user.first_name
@@ -178,7 +178,7 @@ def change_info_view(request,username):
         form.fields['new_ssn'].initial = account.user_ssn
         form.fields['new_photo'].initial = account.user_photo
         form.fields['new_about'].initial = account.user_about
-        return render(request,'forms/change_info_page.html',{'form':form,})
+        return render(request,'forms/change_account_info.html',{'form':form,})
 
 # ======================================
 
@@ -209,3 +209,116 @@ def delete_user_view(request,username):
     return render(request,'forms/delete_user_form.html',content)
 
 # ======================================
+
+@login_required(login_url= 'messenger:login')
+def contact_list_view(request,username):
+    usr = models.Account.objects.get(user__exact = request.user)
+    contacts = models.Contact.objects.filter(Account_id__exact = request.user.id)
+    content = {
+        'contacts':contacts,
+        'usr':usr,
+    }
+    return render(request,'messenger_pages/contact_list.html',content)
+ 
+# ======================================
+
+@login_required(login_url='messenger:login')
+def contact_detail_view(request,username,name,id):
+    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+    content = {
+        'contact':contact,
+    }
+    return render(request,'messenger_pages/contact_detail.html',content)
+
+# ======================================
+
+@login_required(login_url= 'messenger:login')
+def add_contact_view(request,username):
+    
+    usr = models.Account.objects.get(user__exact = request.user)
+    if request.method == 'POST':
+        form = forms.AddContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            contact = models.Contact.objects.create( Account=usr,
+                                                     fname=cd.get('first_name'),
+                                                     lname=cd.get('last_name'),
+                                                     phone_number=cd.get('phone_number'),
+                                                     email = cd.get('email'))
+            contact.save()
+            messages.success(request,'the contact added successfully')
+            return redirect(usr.get_contacts_url())
+        else:
+            messages.error(request,'the form is invalid')
+            return render(request,'forms/add_contact_page.html',{'form':form,'usr':usr,})
+    else:
+        form = forms.AddContactForm()
+        form.fields['account_id'].initial = request.user.id
+        
+    return render(request,'forms/add_contact_page.html',{'form':form,'usr':usr,})
+
+# ======================================
+
+@login_required(login_url= 'messenger:login')
+def change_contact_info_view(request,username,name,id):
+    usr = models.Account.objects.get(user__exact =request.user)
+    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+    if request.method == 'POST':
+        form = forms.ContactChangeInfo(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            contact.fname = cd.get('fname')
+            contact.lname  = cd.get('lname')
+            contact.phone_number = cd.get('phone_number')
+            contact.email = cd.get('email')
+            contact.save()
+            messages.success(request,'the contact Informations Updated')
+            return redirect(contact.get_contact_url())
+        else :
+            messages.error(request,'the form is not valid')
+            return render(request,'forms/change_contact_info.html',{'form':form,'usr':usr,'contact':contact,})        
+    else:
+        form = forms.ContactChangeInfo()
+        form.fields['user_id'].initial = request.user.id
+        form.fields['contact_id'].inital = id
+        form.fields['fname'].initial = contact.fname
+        form.fields['lname'].inityal = contact.lname
+        form.fields['phone_number'].initial = contact.phone_number
+        form.fields['email'].inityal = contact.email
+    
+    content = {
+        'form':form,
+        'usr':usr,
+        'contact':contact,
+    }
+    return render(request,'forms/change_contact_info.html',content)
+
+# ======================================
+
+@login_required(login_url= 'messenger:login')
+def delete_contact_view(request,username,name,id):
+    usr = models.Account.objects.get(user__exact =request.user)
+    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+    if request.method == 'POST':
+        form = forms.DeleteContactForm(request.POST)
+        if form.is_valid():
+            print('\nvalue is : {}\n'.format(form.cleaned_data.get('yes')))
+            if form.cleaned_data.get('yes') == '1':
+                contact.delete()
+                messages.success(request,'the contact deleted ...')
+                return redirect(usr.get_contacts_url())
+            else:
+                messages.error(request,'the contact deletion failed , try again')
+                return render(request,'forms/delete_contact_form.html',{'form':form,'usr':usr,})
+        else :
+            messages.error(request,'the form is not valid')
+            return render(request,'forms/delete_contact_form.html',{'form':form,'usr':usr,'contact':contact,})        
+    else:
+        form = forms.DeleteContactForm()
+    
+    content = {
+        'form':form,
+        'usr':usr,
+        'contact':contact,
+    }
+    return render(request,'forms/delete_contact_form.html',content)

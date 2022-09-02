@@ -1,0 +1,33 @@
+{% extends "Base/base.html" %}
+
+
+{% block title %}
+    {{usr.user.username}} | Contacts
+{% endblock title %}
+
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+
+    <div>
+
+        {% if contacts.count %}
+            <table>
+                <tr> <th> Name </th> </tr>
+                {% for contact in contacts %}
+                    <tr> 
+                        <td> <a href='{{contact.get_contact_url}}'> {{contact.fullname}}  </a> </td>
+                    </tr> 
+                {% endfor %}      
+            </table>
+
+        {% else %}
+            There is No Contacts
+        {% endif %}
+        <a href="{{usr.get_add_contact_url}}"> Add Contact </a>
+    </div>
+
+{% endblock content %}

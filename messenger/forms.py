@@ -79,7 +79,7 @@ class LoginForm(forms.Form):
 # ======================================
 
 
-class ChangeInfoForm(forms.Form):
+class AccountChangeInfoForm(forms.Form):
 
     Choices = {
         ('male','Male'),
@@ -108,7 +108,7 @@ class ChangeInfoForm(forms.Form):
     # -----------------------------------
     new_ssn         = forms.CharField(max_length=10,label='ssn')
     # -----------------------------------
-    new_email       = forms.CharField(label='email')
+    new_email       = forms.CharField(label='email',widget=forms.EmailInput())
     # -----------------------------------
     new_phone_number= forms.CharField(max_length=11 , label='phone_number')
     # -----------------------------------
@@ -143,12 +143,8 @@ class ChangeInfoForm(forms.Form):
         for user in models.Account.objects.exclude(id__exact = theuserid):
             if phone_num == user.user_phone_number:
                 raise forms.ValidationError('the phone number entered is exists , enter another')
-            else :
-                print('the phone is {}'.format(user.user_phone_number))
         return phone_num
         
-
-
     # -----------------------------------
 
 
@@ -172,3 +168,62 @@ class LogoutForm(forms.Form):
 
 # ======================================
 # ======================================
+
+
+class AddContactForm(forms.Form):
+
+    account_id         = forms.IntegerField(label='account id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
+    # -----------------------------------
+    first_name      = forms.CharField(label='first name',max_length=20,widget=forms.TextInput(attrs={'autofocus':True}),)
+    # -----------------------------------
+    last_name       = forms.CharField(label='last name',max_length=30,required=False)
+    # -----------------------------------
+    phone_number    = forms.CharField(label='phone number',max_length=11)
+    # -----------------------------------
+    email           = forms.CharField(label='email',widget=forms.EmailInput(),required=False)
+    # -----------------------------------
+
+    def clean_phone_number(self):
+        number = self.cleaned_data.get('phone_number')
+        account_id   = self.cleaned_data.get('account_id')
+        for contact in models.Contact.objects.filter(Account_id__exact = account_id):
+            if contact.phone_number == number:
+                raise forms.ValidationError('this phone number registered before , please check that OR enter another phone number')
+        return number
+
+
+# ======================================
+# ======================================
+
+
+class DeleteContactForm(forms.Form):
+    
+    yes = forms.CharField(widget=forms.HiddenInput(attrs={'value':'1',}) ,label='yes',required=False)
+    
+
+# ======================================
+# ======================================
+
+class ContactChangeInfo(forms.Form):
+
+    user_id         = forms.IntegerField(label='user_id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)    
+    # -----------------------------------
+    contact_id      = forms.IntegerField(label='contact_id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
+    # -----------------------------------
+    fname           = forms.CharField(label='first name',max_length=20,widget=forms.TextInput(attrs={'autofocus':True}),)
+    # -----------------------------------
+    lname           = forms.CharField(label='last name',max_length=30 , required=False)
+    # -----------------------------------
+    phone_number    = forms.CharField(label='phone number',max_length=11)
+    # -----------------------------------
+    email           = forms.EmailField(label='email',widget=forms.EmailInput(),required=False)
+    # -----------------------------------
+
+    def clean_phone_number(self):
+        number = self.cleaned_data.get('phone_number')
+        user_id = self.cleaned_data.get('user_id')
+        contact_id = self.cleaned_data.get('contact_id')
+        for contact in models.Contact.objects.filter(Account_id__exact=user_id).exclude(id__exact=contact_id):
+            if contact.phone_number == number:
+                raise forms.ValidationError('this phone number already exists in your contacts , please check OR try another number ...')
+        return number

@@ -1,0 +1,24 @@
+{% extends "Base/base.html" %}
+
+{% block title %}
+    {{usr.user.username}} | ADD Contact
+{% endblock title %}
+
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+
+    <div class="add_contact">
+
+        <form method='post'>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit"> Save </button>
+        </form>
+
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,31 @@
+{% extends "Base/base.html" %}
+
+{% block title %}
+    {{contact}} | Contacts 
+{% endblock title %}
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+
+    <div>
+
+        first name      : {{contact.fname}}
+        <br><br>
+        last name       : {{contact.lame}}
+        <br><br>
+        phone number    : {{contact.phone_number}}
+        <br><br>
+        email           : {{contact.email}}
+        <br><br>
+    </div>
+
+    <hr><hr>
+    <div>
+        <a href="{{contact.get_contact_url}}change-info">Edit</a> |
+        <a href="{{contact.get_contact_url}}delete-contact">Delete</a> 
+    <div>
+
+{% endblock content %}
