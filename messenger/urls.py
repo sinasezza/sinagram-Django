@@ -16,5 +16,14 @@ urlpatterns = [
     path('<str:username>/contact/<str:name>-<int:id>/',view=views.contact_detail_view,name='contact_detail'),
     path('<str:username>/contact/<str:name>-<int:id>/change-info',view=views.change_contact_info_view,name='change_contact_info'),
     path('<str:username>/contact/<str:name>-<int:id>/delete-contact',views.delete_contact_view,name='delete_contact'),
+    path('contact/<int:id>/',views.contact_chat_view,name='contact_chat'),
+    path('contact/<int:id>/message-count/',views.get_message_numbers,name='message_count'),
+    path('contact/<int:id>/get-all-messages/',views.get_all_messages,name='get_all_messages'),
+    path('delete-message/<int:id>/',views.delete_message,name='delete_message'),
+    path('edit-message/<int:id>/',views.edit_message_view,name='edit_message'),
+    # path('edit')
+
+
+
 
 ]

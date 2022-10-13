@@ -1,5 +1,6 @@
 {% extends "Base/base.html" %}
 
+
 {% block title %}
     {{usr.user.username}} | ADD Contact
 {% endblock title %}
@@ -11,7 +12,7 @@
 
 {% block content %}
 
-    <div class="add_contact">
+    <div id="add_contact">
 
         <form method='post'>
             {% csrf_token %}

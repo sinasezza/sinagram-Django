@@ -1,0 +1,262 @@
+{% extends "Base/base.html" %}
+
+{% block title %}
+    chat 
+{% endblock title %}
+
+
+
+{% block content %}
+
+    <div  id="_messages" onclick="isOpenMenu=false;hide_menu(event);" oncontextmenu='event.preventDefault();'> </div>
+    
+    <ul id="messageContextMenu" oncontextmenu="event.preventDefault();">  <li>Edit</li> <li >Delete</li>  </ul>
+    
+
+    <div id="form_div" >
+        <form method="POST" id="send_message_form" action="">
+            {% csrf_token %}
+            <label> Message :  </label>
+            {{form.message}}
+            <br>
+            <button type="submit" id="sub_btn">SEND</button>
+        </form>
+    
+        <form method="POST" id="edit_message_form" action="" style="display: none;">
+            {% csrf_token %}
+            <label> EDIT :  </label>
+            <textarea name="" id="msg" cols="80" rows="2" maxlength="500"></textarea>
+            <br>
+            <button type="submit" >UPDATE</button>
+        </form>
+
+        <ul id="deletionForm">
+            <li> Are you sure to delete this message ?</li>
+            <li><button id="del_button">Yes,delete message</button> </li> 
+            <li><button id="dont_del_button">NO,Don't Delete</button> </li> 
+        </ul>
+
+    </div>
+
+
+
+
+    <script>
+        var message_num = '0';
+        var fetched_num = '0';
+        var isOpenMenu = false;
+        var isOpen_delete_confirm = false;
+        
+        $('#send_message_form').on('submit',submit_message);
+
+        // -------------------------
+        $('#send_message_form').on('keydown',function(event) {
+            if(event.shiftKey && event.keyCode == 13 )
+                return ;
+            if(event.keyCode == 13)
+                submit_message(event);
+        });
+        // -------------------------
+        function submit_message(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url : window.location.href,
+                data: $('#send_message_form').serialize(),
+                success : function(response) {
+                    $('#send_message_form').trigger("reset");
+                    $('#send_message_form textarea').trigger("focus");
+                }
+            })  
+        }
+        // -------------------------
+		function show_menu(e){
+            e.preventDefault();
+            isOpenMenu = true
+            var menu = $('#messageContextMenu');
+            var edit_button = $('#messageContextMenu :nth-child(1)');
+            var del_button  = $('#messageContextMenu :nth-child(2)');
+
+            edit_button.unbind().click(function(){
+                menu.css('display','none');
+                isOpenMenu = false;
+                edit_message(e,e.srcElement['id']);
+            });
+            del_button.unbind().click(function(){
+                menu.css('display','none');
+                isOpenMenu = false;
+                show_delete_confirm(e,e.srcElement['id'])
+            });
+            menu.css('left', e.pageX+'px');
+			menu.css('top', e.pageY+'px');
+			menu.css('display', "inline");
+		}
+        // --------------------------
+        function hide_menu() {
+		    $('#messageContextMenu').css('display','none');
+		}
+        // --------------------------
+        function show_delete_confirm(event,num){
+            if (isOpen_delete_confirm == false) {
+                isOpen_delete_confirm = true;
+                event.srcElement.style.backgroundColor='#dda0dd';
+                const deletionForm = $('#deletionForm');
+                deletionForm.css('display','inline-block');
+                var h = event.pageY;
+                deletionForm.css('left' , '350px');
+                deletionForm.css('top' ,  (h-10)+'px');
+                $('#del_button').unbind().click(function() {
+                    delete_message(num);
+                    hide_deletion_confirm();
+                    isOpen_delete_confirm = false;
+                });
+                $('#dont_del_button').unbind().click(function() {
+                    hide_deletion_confirm();
+                    event.srcElement.style.backgroundColor = '#f5deb3';
+                    isOpen_delete_confirm = false;
+                });
+            }
+        }
+        // --------------------------
+        function hide_deletion_confirm(){
+            $('#deletionForm').css('display','none');
+        }
+        // --------------------------
+        function delete_message(num){
+            var url = '/delete-message/'+num+'/';
+            $.ajax({
+                type:'POST',
+                url : url,
+                data: {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                },
+            })
+        }
+        // --------------------------
+        function edit_message(event,num){
+            const main_form = $('#send_message_form')
+            var main_text = main_form.children('textarea');
+            const edit_form = $('#edit_message_form')
+            var edit_text = edit_form.children('textarea');
+            edit_form.css('display','block');
+            main_form.css('display','none');
+            // ------------
+            var message;
+            $.ajax({ 
+                type:'GET',
+                url : '/edit-message/'+num+'/',
+                success : function(response) {
+                    message = JSON.parse(response)[0].message;
+                    edit_text.val(message);
+                    edit_text.trigger('focus')
+                }
+            })
+            // ------------
+            edit_form.children('button').unbind().click(function(e) {
+                e.preventDefault();
+                // checks that if message has changed or not . if changed do commands if not return 
+                if (edit_text.val() == message) {
+                    edit_form.trigger('reset');
+                    return;
+                }
+                $.ajax({
+                    type:'POST',
+                    url : '/edit-message/'+num+'/',
+                    data: {
+                        csrfmiddlewaretoken : edit_form.children('input[name="csrfmiddlewaretoken"]').val(),
+                        msg                 : edit_text.val(),
+                    },
+                    success : function(response) {
+                        message_num --;
+                        edit_form.css('display','none');
+                        main_form.css('display','block');
+                        edit_form.trigger('reset');
+                        main_text.trigger('focus');
+
+                    }
+                })
+            })
+            // ------------
+            edit_form.unbind().keydown(function(event) {
+                if(event.shiftKey && event.keyCode == 13 )
+                    return ;
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    // checks that if message has changed or not . if changed do commands if not return 
+                    if (edit_text.value == message) {
+                        edit_form.reset();
+                        return;
+                    }
+
+                    $.ajax({
+                        type:'POST',
+                        url : '/edit-message/'+num+'/',
+                        data: {
+                            csrfmiddlewaretoken : edit_form.children('input[name="csrfmiddlewaretoken"]').val(),
+                            msg                 : edit_text.val(),
+                        },
+                        success : function(response) {
+                        message_num --;
+                        edit_form.css('display','none');
+                        main_form.css('display','block');
+                        edit_form.trigger('reset');
+                        main_text.trigger('focus');
+                        }
+                    })
+                }
+            }) 
+            // ------------
+
+        }
+        // --------------------------
+        setInterval(function() {
+                $.ajax({
+                    type:'GET',
+                    url : 'message-count/',
+                    success : function(response){
+                        fetched_num = response;
+                    }
+                })
+                // -------------------------
+                if(message_num != fetched_num){
+                    $.ajax({
+                        type:'GET',
+                        url : 'get-all-messages/',
+                        success: function(response) {
+                            response = JSON.parse(response)
+                            for (var key in response){
+                                if (key == 0)
+                                   $('#_messages').html(''); 
+                                var output = 'sender : '+ response[key].sender +'<br>'+
+                                'message : ' + response[key].message+'<br>'+
+                                response[key].sent_date.substring(0,19);
+                                const newElem = document.createElement('div');
+                                newElem.setAttribute('class','single_message');
+                                var id = response[key].id
+                                newElem.setAttribute('id',id);
+                                newElem.oncontextmenu = function(e){
+                                    !isOpenMenu && !isOpen_delete_confirm && show_menu(e);  
+                                }
+                                newElem.innerHTML = output;
+                                $('#_messages').append(newElem);
+                            }
+                            message_num = fetched_num;
+                        },
+                        error: function(response){
+                            console.log('something wrong : ',response);
+                        }
+                    });  
+                }
+                // -------------------
+
+        },1000);
+        // -------------------------
+    </script>
+
+{% endblock content %}
+
+
+
+
+
+

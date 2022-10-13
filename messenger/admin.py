@@ -11,6 +11,15 @@ class AccountAdmin(admin.ModelAdmin):
 
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('username','fname','lname','phone_number','email')
+    list_filter  = ('Account',)
+
+
+# ======================================
+# ======================================
+
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('__str__','message','sent_date','ack',)
 
 
 # ======================================
@@ -19,3 +28,4 @@ class ContactAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Account,AccountAdmin)
 admin.site.register(models.Contact,ContactAdmin)
+admin.site.register(models.Message,MessageAdmin)

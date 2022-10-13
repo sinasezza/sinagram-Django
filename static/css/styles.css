@@ -1,0 +1,97 @@
+/* ------------------------- */
+#messages {
+    background-color: darkturquoise;
+    font-size: 20px;
+    font-family: monospace;
+    margin : 20px;
+    width : 800px;
+    text-align: center;
+}
+/* ------------------------- */
+#add_contact {
+    text-align: center;
+    background-color: goldenrod;
+    text-shadow: 10px;
+    font-size: larger;
+}
+/* ------------------------- */
+#_messages {
+    width: 700px;
+    background-color: #f5deb3;
+    margin-left: 300px;
+
+}
+/* ------------------------- */
+#_messages textarea {
+    resize: none;
+}
+/* ------------------------- */
+.single_message {
+    margin: 10px 10px;
+    border: 2px double lightsalmon;
+}
+/* ------------------------- */
+#messageContextMenu {
+    display : none;
+    list-style : none;
+    position : absolute;
+    z-index : 999;
+    box-shadow : 5px 5px 5px gray;
+    width : 200px;
+    height : 99px;
+    border : 1px solid gray;
+    background-color : rgb(234 , 231 , 245);
+    padding : 0px;
+    font-family : verdana;
+}
+/* ------------------------- */
+#messageContextMenu li {  
+    height : 30px;
+    border-bottom : 1px solid silver;
+    padding-top : 15px;
+    padding-left : 20px;
+}
+/* ------------------------- */
+#messageContextMenu li:hover {
+    background-color : orange;
+    cursor : pointer;
+}
+/* ------------------------- */
+#deletionForm {
+    display : none;
+    width : 600px;
+    height : 55px;
+    position : absolute;
+    text-align: center;
+    z-index : 999;
+    background-color : rgb(201, 209, 196);
+    opacity : 0.8;
+    left : 0px;
+    top : 0px;
+}
+/* ------------------------- */
+#deletionForm li:first-child {
+    display: block;
+    text-align: left;
+    margin: 0px;
+    padding-left: 10px;
+    font-weight: bold;   
+}
+/* ------------------------- */
+#deletionForm li {
+    display: inline;
+    margin: 10px 30px;
+}
+/* ------------------------- */
+#deletionForm button:hover {
+    background-color: aquamarine;
+    cursor: pointer;
+}
+/* ------------------------- */
+#form_div {
+    position: fixed;
+    width: 700px;
+    margin-left: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

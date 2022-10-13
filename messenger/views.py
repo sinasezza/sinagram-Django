@@ -1,10 +1,16 @@
-from django.shortcuts import render , redirect 
+from django.shortcuts import render , redirect , HttpResponse , get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import login , authenticate , logout  
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.contrib import messages 
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.core import serializers
+import json
+from django.forms.models import model_to_dict
+
 from . import models,forms
+# from rest_framework.decorators import api_view
 
 
 def main_page(request):
@@ -167,17 +173,17 @@ def change_account_info_view(request,username):
     
     else:
         form = forms.AccountChangeInfoForm()
-        form.fields['user_id'].initial = request.user.id
-        form.fields['new_username'].initial = account.user.username
-        form.fields['new_first_name'].initial = account.user.first_name
-        form.fields['new_last_name'].initial = account.user.last_name
-        form.fields['new_email'].initial = account.user.email
+        form.fields['user_id'].initial          = request.user.id
+        form.fields['new_username'].initial     = account.user.username
+        form.fields['new_first_name'].initial   = account.user.first_name
+        form.fields['new_last_name'].initial    = account.user.last_name
+        form.fields['new_email'].initial        = account.user.email
         form.fields['new_phone_number'].initial = account.user_phone_number
-        form.fields['new_gender'].initial = account.user_gender
-        form.fields['new_age'].initial = account.user_age
-        form.fields['new_ssn'].initial = account.user_ssn
-        form.fields['new_photo'].initial = account.user_photo
-        form.fields['new_about'].initial = account.user_about
+        form.fields['new_gender'].initial       = account.user_gender
+        form.fields['new_age'].initial          = account.user_age
+        form.fields['new_ssn'].initial          = account.user_ssn
+        form.fields['new_photo'].initial        = account.user_photo
+        form.fields['new_about'].initial        = account.user_about
         return render(request,'forms/change_account_info.html',{'form':form,})
 
 # ======================================
@@ -225,11 +231,21 @@ def contact_list_view(request,username):
 @login_required(login_url='messenger:login')
 def contact_detail_view(request,username,name,id):
     contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
-    content = {
-        'contact':contact,
-    }
-    return render(request,'messenger_pages/contact_detail.html',content)
-
+    try:
+        contact_account = models.Account.objects.get(user_phone_number__exact = contact.phone_number)
+        content = {
+            'contact':contact,
+            'account':contact_account,
+        }
+        
+    except:
+        content = {
+            'contact':contact,
+        }
+        
+    
+    return render(request,'messenger_pages/contact_detail.html',content) 
+        
 # ======================================
 
 @login_required(login_url= 'messenger:login')
@@ -280,11 +296,11 @@ def change_contact_info_view(request,username,name,id):
     else:
         form = forms.ContactChangeInfo()
         form.fields['user_id'].initial = request.user.id
-        form.fields['contact_id'].inital = id
+        form.fields['contact_id'].initial = id
         form.fields['fname'].initial = contact.fname
-        form.fields['lname'].inityal = contact.lname
+        form.fields['lname'].initial = contact.lname
         form.fields['phone_number'].initial = contact.phone_number
-        form.fields['email'].inityal = contact.email
+        form.fields['email'].initial = contact.email
     
     content = {
         'form':form,
@@ -322,3 +338,81 @@ def delete_contact_view(request,username,name,id):
         'contact':contact,
     }
     return render(request,'forms/delete_contact_form.html',content)
+
+# ======================================
+
+@login_required(login_url= 'messenger:login')
+def contact_chat_view(request,id):
+    sender = models.Account.objects.get(id__exact = request.user.id)
+    receiver = models.Account.objects.get(id__exact = id)
+
+    if request.method == 'POST':
+        form = forms.SendMessageForm(request.POST,request.FILES)
+        if form.is_valid():
+            cd = form.cleaned_data
+            message = models.Message.objects.create(  sender=sender ,
+                                            receiver=receiver,
+                                            message=cd['message'])
+            message.save()
+            return JsonResponse(make_data_message([message,]),safe=False)
+        else:
+            messages.error(request,'form is not valid')
+
+    else :
+            form = forms.SendMessageForm()
+            form.fields['sender_id'].initial = sender.id
+            form.fields['receiver_id'].initial = receiver.id
+            return render(request,'messenger_pages/contact_chat_page.html',context={'form':form,})
+
+# =====================================
+
+@login_required(login_url = 'messenger:login')
+def get_message_numbers(request,id):
+    all_messages = models.Message.objects.filter(sender_id__exact=id,receiver_id__exact=request.user.id) | \
+        models.Message.objects.filter(sender_id__exact=request.user.id,receiver_id__exact=id)
+    return HttpResponse(all_messages.count())
+
+# =====================================
+
+@login_required(login_url= 'messenger:login')
+def get_all_messages(request,id):
+
+    all_messages = models.Message.objects.filter(sender_id__exact=id,receiver_id__exact=request.user.id) | \
+        models.Message.objects.filter(sender_id__exact=request.user.id,receiver_id__exact=id)
+    all_messages = all_messages.order_by('id')
+    return JsonResponse(make_data_message(all_messages),safe=False)
+
+# =====================================
+
+@login_required(login_url= 'messenger:login')
+def delete_message(request,id):
+    if request.method == 'POST':
+        instance = get_object_or_404(models.Message,id__exact =id)
+        instance.delete()
+    return HttpResponse(id)
+
+# =====================================
+
+@login_required(login_url= 'messenger:login')
+def edit_message_view(request,id):
+    theMessage = models.Message.objects.get(id__exact=id)
+    if request.method == 'POST':
+        theMessage.message = request.POST['msg']
+        theMessage.save()
+    data = make_data_message([theMessage,])
+    return JsonResponse(data,safe=False)
+
+# =====================================
+
+def make_data_message(messages):
+    data = []
+    for i in range(len(messages)):
+        data.append({
+            'id':messages[i].id,
+            'sender':messages[i].sender.user.username,
+            'message':messages[i].message,
+            'sent_date':str(messages[i].sent_date),
+        })
+    return json.dumps(data)
+
+# =====================================

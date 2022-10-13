@@ -1,3 +1,4 @@
+from email import message
 from django import forms
 from . import models
 from django.contrib.auth.models import User
@@ -227,3 +228,26 @@ class ContactChangeInfo(forms.Form):
             if contact.phone_number == number:
                 raise forms.ValidationError('this phone number already exists in your contacts , please check OR try another number ...')
         return number
+
+
+# ======================================
+# ======================================
+
+
+class SendMessageForm(forms.Form):
+    
+    sender_id   = forms.IntegerField(label='sender_id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
+    # -----------------------------------
+    receiver_id = forms.IntegerField(label='receiver_id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
+    # -----------------------------------
+    file        = forms.FileField(label='file',required=False)
+    # -----------------------------------
+    message     = forms.CharField(label='message',max_length=500,widget=forms.Textarea(attrs={'autofocus':True,'rows':2,'cols':80,}))
+
+
+# ======================================
+# ======================================
+
+
+
+    

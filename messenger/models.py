@@ -2,7 +2,8 @@ from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth import get_user_model
 import datetime
-import json
+from django.utils import timezone , dateformat
+
 
 
 class Account(models.Model):
@@ -59,6 +60,14 @@ class Account(models.Model):
 
     # -----------------------------------
 
+    def get_chat_page(self):
+        return reverse('messenger:contact_chat',args=[self.user.id])
+
+    # -----------------------------------
+
+    def __str__(self):
+        return self.user.username
+
 
 # ======================================
 # ======================================
@@ -80,19 +89,50 @@ class Contact(models.Model):
 
 
     def __str__(self):
-        return self.Account.user.username
+        return '{}\'s contact : {}'.format(self.Account.user.username,self.fullname)
+
+    # -----------------------------------
 
     @property
     def username(self):
         return self.Account.user.username
     
+    # -----------------------------------
+
     @property
     def fullname(self):
         if self.lname == None:
             return self.fname
         return self.fname + ' ' + self.lname
 
+    # -----------------------------------
+
     def get_contact_url(self):
         return reverse('messenger:contact_detail',args=[self.username,self.fullname,self.id])
     
+    # -----------------------------------
     
+
+# ======================================
+# ======================================
+
+
+class Message(models.Model):
+    
+    sender   = models.ForeignKey(to=Account,on_delete=models.DO_NOTHING,related_name='sender')
+    # -----------------------------------
+    receiver = models.ForeignKey(to=Account,on_delete=models.DO_NOTHING,related_name='receiver')
+    # -----------------------------------
+    content  = models.FileField(upload_to='content/',null=True,blank=True)
+    # -----------------------------------
+    message  = models.TextField(max_length=500,null=True , blank=True)
+    # -----------------------------------
+    sent_date= models.DateTimeField(default=dateformat.format(timezone.now(), 'Y-m-d H:i:s'))
+    # -----------------------------------
+    ack      = models.BooleanField(default=False)
+    # -----------------------------------
+
+    def __str__(self):
+        return 'massage_id ({}) - from {} to {}'.format(self.id,self.sender,self.receiver)
+
+    # -----------------------------------
