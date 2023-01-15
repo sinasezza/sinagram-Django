@@ -90,7 +90,7 @@ DATABASES = {
        'ENGINE': 'django.db.backends.postgresql' ,
        'NAME' : 'sinagram' ,
        'USER' : 'postgres' ,
-       'PASSWORD'  : '4114800' ,
+       'PASSWORD'  : '111111' ,
        'PORT' : '5432' , 
 
     }
