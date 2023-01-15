@@ -9,11 +9,12 @@
 
 
 {% block content %}
-
-    <form method='POST' enctype="multipart/form-data">
+    <h2><u>Change Account Info</u></h2>
+    <form method='POST' enctype="multipart/form-data" id="profile_form">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type='submit' value='update'>
+        <br/>
+        <input type='submit' value='UPDATE' class="update_btn">
     </form>
 
 {% endblock content %}

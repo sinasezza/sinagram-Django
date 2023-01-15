@@ -9,11 +9,12 @@
 
 {% block content %}
 
-    <form method="POST" action="" enctype="multipart/form-data">
+    <form method="POST" action="" enctype="multipart/form-data" id="profile_form">
+        <h2><u>SIGNUP</u></h2>
         {% csrf_token %}
         {{form.as_p}}
         <hr>
-        <button type="submit">Signup</button>
+        <input type='submit' value='SIGNUP' class="submit_btn">
     </form>
 
 {% endblock content %}

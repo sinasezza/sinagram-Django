@@ -16,19 +16,33 @@
 }
 /* ------------------------- */
 #_messages {
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
     width: 700px;
+    height: 650px;
     background-color: #f5deb3;
     margin-left: 300px;
-
+    overflow: auto;
+    white-space: nowrap;
 }
 /* ------------------------- */
-#_messages textarea {
-    resize: none;
-}
-/* ------------------------- */
-.single_message {
+.single_message_sender {
     margin: 10px 10px;
+    width: 300px;
     border: 2px double lightsalmon;
+    background-color: rgb(248, 202, 186);
+    padding: 5px;
+}
+/* ------------------------- */
+.single_message_receiver {
+    
+    margin: 10px 10px 10px 350px;
+    width: 300px;
+    border: 2px double rgb(228, 152, 121);
+    background-color: pink;
+    padding: 5px;
+    
 }
 /* ------------------------- */
 #messageContextMenu {
@@ -38,7 +52,7 @@
     z-index : 999;
     box-shadow : 5px 5px 5px gray;
     width : 200px;
-    height : 99px;
+    height : 140px;
     border : 1px solid gray;
     background-color : rgb(234 , 231 , 245);
     padding : 0px;
@@ -89,9 +103,177 @@
 }
 /* ------------------------- */
 #form_div {
-    position: fixed;
-    width: 700px;
+    width: 800px;
     margin-left: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
+
+}
+/* ------------------------- */
+#form_div li{
+    display: inline;
+    list-style-type: none;
+}
+/* ------------------------- */
+.smallImg{
+    width   : 300px;
+    height  : 168px;
+    margin: 2px;
+}
+/* ------------------------- */
+#mask{
+    display : none;
+    width : 100%;
+    height : 100%;
+    position : absolute;
+    z-index : 999;
+    background-color : black;
+    opacity : 0.6;
+    left : 0px;
+    top : 0px;
+}
+/* ------------------------- */
+#edit_contact_form{
+    left: 45px;
+    font-size: 40px;
+    border: 4px dashed beige;
+}
+/* ------------------------- */
+#edit_contact_form #submit_btn{
+    font-size: 60px;
+    background-color: cornflowerblue;
+    color: white;
+}
+/* ------------------------- */
+#edit_contact_form #submit_btn:hover{
+    cursor: pointer;
+}
+/* ------------------------- */
+#edit_contact_form p label{
+    margin: 10px;
+}
+/* ------------------------- */
+#edit_contact_form p input{
+    margin-left: 20px;
+}
+/* ------------------------- */
+#contact_list{
+    background-color: lavenderblush;
+    left: 45px;
+    font-size: 50px;
+    padding: 10px;
+}
+/* ------------------------- */
+#contact_list ul{
+    list-style-type: decimal;
+    border: 4px double black;
+    margin: 15px;
+    padding: 5px;
+}
+/* ------------------------- */
+#contact_list ul li{
+    border-bottom: 2px solid blue;
+    margin-left: 50px;
+}
+/* ------------------------- */
+.profile{
+    background-color: lemonchiffon;
+    font-size: 20px;
+    line-height: 30px;
+}
+/* ------------------------- */
+#profile_form{
+    font-size: 20px;
+    border: 4px dotted black;
+    text-align: center;
+    padding: 20px;
+    background-color: mistyrose;
+    width: 500px;
+    margin-left: 350px;
+}
+/* ------------------------- */
+#profile_form textarea{
+    width: 300px;
+    height: 100px;
+}
+/* ------------------------- */
+#profile_form .submit_btn{
+    width: 300px;
+    height: 50px;
+    background-color: aquamarine;
+    border-radius: 45px;
+    letter-spacing: 4px;
+    font-size: 30px;
+}
+/* ------------------------- */
+#profile_form .submit_btn:hover{
+    background-color: darkseagreen;
+    cursor: pointer;
+}
+/* ------------------------- */
+#login_form{
+    width: 500px;
+    height: 300px;
+    background-color: powderblue;
+    margin-left: 400px;
+    font: 30px;
+}
+/* ------------------------- */
+#login_form label{
+    font-size: 50px;
+}
+/* ------------------------- */
+#login_form input {
+    width: 190px;
+    height: 40px;
+}
+/* ------------------------- */
+#login_form button{
+    background-color: dodgerblue;
+    color: white;
+    font-size: 40px;
+    width: 140px;
+    height: 60px;
+    margin-left: 160px;
+}
+/* ------------------------- */
+#login_form button:hover{
+    background-color: lightskyblue;
+    cursor: pointer;
+}
+/* ------------------------- */
+.IntroLinks{
+    width: 400px;
+    height: 300px;
+    background-color: antiquewhite;
+    font-size: 20px;
+}
+/* ------------------------- */
+#contact_detail{
+    background-color: #f5deb3;
+    font-size: 25px;
+}
+/* ------------------------- */
+.editOptions{
+    font-size: 25px;
+}
+/* ------------------------- */
+#contact_detail button{
+    margin-left: 20px;
+    width: 220px;
+    height: 100px;
+    font-size: 30px;
+    background-color: floralwhite;
+    margin-bottom: 20px;
+    border-radius: 40px;
+}
+/* ------------------------- */
+#contact_detail button:hover{
+    background-color: darkturquoise;
+    cursor: pointer;
+}
+/* ------------------------- */
+#edit_contact_form #submit_btn{
+    width: 250px;
+    border-radius: 30px;
+    margin-left: 20px;
+    margin: 10px;
 }

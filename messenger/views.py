@@ -352,7 +352,8 @@ def contact_chat_view(request,id):
             cd = form.cleaned_data
             message = models.Message.objects.create(  sender=sender ,
                                             receiver=receiver,
-                                            message=cd['message'])
+                                            message=cd['message'],
+                                            content=request.FILES.get('file',False))
             message.save()
             return JsonResponse(make_data_message([message,]),safe=False)
         else:
@@ -393,26 +394,25 @@ def delete_message(request,id):
 
 # =====================================
 
-@login_required(login_url= 'messenger:login')
-def edit_message_view(request,id):
-    theMessage = models.Message.objects.get(id__exact=id)
-    if request.method == 'POST':
-        theMessage.message = request.POST['msg']
-        theMessage.save()
-    data = make_data_message([theMessage,])
-    return JsonResponse(data,safe=False)
-
-# =====================================
-
 def make_data_message(messages):
     data = []
     for i in range(len(messages)):
-        data.append({
-            'id':messages[i].id,
-            'sender':messages[i].sender.user.username,
-            'message':messages[i].message,
-            'sent_date':str(messages[i].sent_date),
-        })
+        if(messages[i].content != 'False'):
+            data.append({
+                'id':messages[i].id,
+                'sender':messages[i].sender.user.username,
+                'message':messages[i].message,
+                'file':'/media/'+str(messages[i].content),
+                'sent_date':str(messages[i].sent_date),
+            })
+        else:  
+            data.append({
+                'id':messages[i].id,
+                'sender':messages[i].sender.user.username,
+                'message':messages[i].message,
+                'file':str(messages[i].content),
+                'sent_date':str(messages[i].sent_date),
+            })
     return json.dumps(data)
 
 # =====================================

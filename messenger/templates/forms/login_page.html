@@ -7,7 +7,8 @@
 {% comment %} ------------------------------------- {% endcomment %}
 
 {% block content %}
-    <form method="POST" action="" >
+    <form method="POST" action="" id="login_form">
+        <h2><u>LOGIN</u></h2>
         {% csrf_token %}
 
         {{form.as_p}}
@@ -17,8 +18,5 @@
     </form>
 
     <br><br>
-
-    
-
 
 {% endblock content %}

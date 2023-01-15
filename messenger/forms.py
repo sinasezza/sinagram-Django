@@ -242,7 +242,7 @@ class SendMessageForm(forms.Form):
     # -----------------------------------
     file        = forms.FileField(label='file',required=False)
     # -----------------------------------
-    message     = forms.CharField(label='message',max_length=500,widget=forms.Textarea(attrs={'autofocus':True,'rows':2,'cols':80,}))
+    message     = forms.CharField(label='message',required=False,max_length=500,widget=forms.Textarea(attrs={'autofocus':True,'rows':2,'cols':70,'id':'id_text','style':'resize:none;',}))
 
 
 # ======================================

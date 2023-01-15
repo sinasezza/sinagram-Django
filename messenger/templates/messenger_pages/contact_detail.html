@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    <div>
+    <div id='contact_detail'>
 
         first name      : {{contact.fname}}
         <br><br>
@@ -27,7 +27,7 @@
     </div>
 
     <hr><hr>
-    <div>
+    <div class="editOptions">
         <a href="{{contact.get_contact_url}}change-info">Edit</a> |
         <a href="{{contact.get_contact_url}}delete-contact">Delete</a> 
     <div>

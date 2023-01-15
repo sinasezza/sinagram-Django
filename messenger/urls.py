@@ -20,8 +20,6 @@ urlpatterns = [
     path('contact/<int:id>/message-count/',views.get_message_numbers,name='message_count'),
     path('contact/<int:id>/get-all-messages/',views.get_all_messages,name='get_all_messages'),
     path('delete-message/<int:id>/',views.delete_message,name='delete_message'),
-    path('edit-message/<int:id>/',views.edit_message_view,name='edit_message'),
-    # path('edit')
 
 
 

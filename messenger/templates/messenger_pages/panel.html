@@ -26,16 +26,19 @@
         email : {{usr.user.email}}
         <br>
         {% if usr.user_photo %}
-             photo : <img src="{{usr.user_photo.url}}" alt="profile photo" width="150px" height="170px" >
+             photo : <img src="{{usr.user_photo.url}}" onclick="showOriginal(this)" alt="profile photo" width="150px" height="170px" >
         {% else %}
             photo : There is no photo
         {% endif %}
         <br>
     </div>
 
+    <div id="mask" onclick="hideImg()"></div>
+
     <div class="editOptions">
         <a href="{{usr.get_panel_url}}/change-info">Edit</a> | 
         <a href="{{usr.get_panel_url}}/delete-user">Delete</a>
     </div>
+
 
 {% endblock content %}
