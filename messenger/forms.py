@@ -12,29 +12,29 @@ class SignupForm(forms.Form):
         ('others','Others'),
     }
 
-    username    = forms.CharField(label='username')
+    username    = forms.CharField(label='username',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
-    password1   = forms.CharField(widget=forms.PasswordInput(), label='entered password')
+    password1   = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'required'}), label='Enter password',)
     # -----------------------------------
-    password2   = forms.CharField(widget=forms.PasswordInput(), label='confirm password')
+    password2   = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'required'}), label='Confirm password')
     # -----------------------------------
-    first_name  = forms.CharField(label='first_name')
+    first_name  = forms.CharField(label='first name',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
-    last_name   = forms.CharField(label='last_name')
+    last_name   = forms.CharField(label='last name',required=False)
     # -----------------------------------
-    gender      = forms.ChoiceField(label='gender' , choices=Choices)
+    gender      = forms.ChoiceField(label='gender' , choices=Choices,required=False)
     # -----------------------------------
-    age   = forms.CharField(label='age')
+    age   = forms.CharField(label='age',required=False)
     # -----------------------------------
-    ssn   = forms.CharField(max_length=10 , label='ssn')
+    ssn   = forms.CharField(max_length=10 , label='ssn',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
-    email       = forms.CharField(widget=forms.EmailInput(),label='email')
+    email       = forms.CharField(widget=forms.EmailInput(),label='email',required=False)
     # -----------------------------------
-    phone_number= forms.CharField(max_length=11 , label='phone_number',)
+    phone_number= forms.CharField(max_length=11 , label='phone number',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
     photo     = forms.ImageField(widget=forms.FileInput(),label='photo' , required=False)
     # -----------------------------------
-    about     = forms.CharField(label='about',widget=forms.Textarea())
+    about     = forms.CharField(label='about',widget=forms.Textarea(),required=False)
     # -----------------------------------
 
     def clean_username(self):
@@ -175,11 +175,11 @@ class AddContactForm(forms.Form):
 
     account_id         = forms.IntegerField(label='account id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
     # -----------------------------------
-    first_name      = forms.CharField(label='first name',max_length=20,widget=forms.TextInput(attrs={'autofocus':True}),)
+    first_name      = forms.CharField(label='first name (Required)',max_length=20,widget=forms.TextInput(attrs={'autofocus':True}),)
     # -----------------------------------
     last_name       = forms.CharField(label='last name',max_length=30,required=False)
     # -----------------------------------
-    phone_number    = forms.CharField(label='phone number',max_length=11)
+    phone_number    = forms.CharField(label='phone number (Required)',max_length=11)
     # -----------------------------------
     email           = forms.CharField(label='email',widget=forms.EmailInput(),required=False)
     # -----------------------------------

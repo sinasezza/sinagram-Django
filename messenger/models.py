@@ -129,8 +129,6 @@ class Message(models.Model):
     # -----------------------------------
     sent_date= models.DateTimeField(default=dateformat.format(timezone.now(), 'Y-m-d H:i:s'))
     # -----------------------------------
-    ack      = models.BooleanField(default=False)
-    # -----------------------------------
 
     def __str__(self):
         return 'massage_id ({}) - from {} to {}'.format(self.id,self.sender,self.receiver)

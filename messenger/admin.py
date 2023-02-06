@@ -19,7 +19,7 @@ class ContactAdmin(admin.ModelAdmin):
 
 
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('__str__','message','sent_date','ack',)
+    list_display = ('__str__','message','sent_date',)
 
 
 # ======================================
