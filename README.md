@@ -20,18 +20,5 @@ tzdata==2022.7
 </pre>
 
 # Database
-in this project I used Postgresql database
-<br/>
-instead you can use Django`s default database(Sqlite)
-<br/>
-add this commands to /sinagram/settings.py:
-<br/>
-<pre>
-DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-  }
-}
-</pre>
+Default Database on this project is Postgresql
 

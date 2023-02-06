@@ -26,7 +26,7 @@ class Account(models.Model):
     }
     user = models.OneToOneField(get_user_model(),on_delete=models.CASCADE)
     # -----------------------------------
-    user_age                 = models.PositiveSmallIntegerField(null=True , blank=True , )
+    user_age                 = models.CharField(max_length=2,null=True , blank=True , default='0')
     # -----------------------------------
     user_ssn                 = models.CharField(max_length=10 , null=True , blank=True , )
     # -----------------------------------

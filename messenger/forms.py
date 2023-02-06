@@ -48,6 +48,9 @@ class SignupForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        if len(email) == 0:
+            return email
+            
         for user in User.objects.all():
             if email == user.email:
                 raise forms.ValidationError('this email is already used , please enter another email')
