@@ -23,7 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'messenger.apps.MessengerConfig',
+    
+    'users',
+    'messenger',
 ]
 
 MIDDLEWARE = [
@@ -109,3 +111,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_ID_LENGTH = 9
