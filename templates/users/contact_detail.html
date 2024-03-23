@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    {{contact}} | Contacts 
+{% endblock title %}
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+
+    <div id='contact_detail'>
+
+        first name      : {{contact.fname}}
+        <br><br>
+        last name       : {{contact.lame}}
+        <br><br>
+        phone number    : {{contact.phone_number}}
+        <br><br>
+        email           : {{contact.email}}
+        <br><br>
+
+        {% if account %}
+            <h2> <a href="{{account.get_chat_page}}"> <button> Send Message </button> </a> </h2>
+        {% endif %}
+    </div>
+
+    <hr><hr>
+    <div class="editOptions">
+        <a href="{{contact.get_contact_url}}change-info">Edit</a> |
+        <a href="{{contact.get_contact_url}}delete-contact">Delete</a> 
+    <div>
+
+{% endblock content %}

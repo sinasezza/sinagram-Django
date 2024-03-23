@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    Delete User : {{usr.user.username}}
+{% endblock title %}
+
+
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+
+{% block content %}
+    <h3> Do you want to delete your account ({{usr.user.username}})? </h3>
+    <ul>
+        <li style="display: inline-block;margin : 10px;" >
+            <form method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type='submit' value='Yes , Delete My Account' style="background-color=red"> 
+            </form>
+        </li>
+        <li style="display: inline-block;margin : 10px;">
+            <a href="{{usr.get_panel_url}}"><button> No , Back To panel</button></a>
+        </li>
+    </ul>
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,262 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+    chat 
+{% endblock title %}
+
+
+
+{% block content %}
+
+    <div  id="_messages" onclick="isOpenMenu=false;hide_menu(event);" oncontextmenu='event.preventDefault();'> </div>
+    
+    <div id="mask" onclick="hideImg()"></div>
+    
+    <ul id="messageContextMenu" oncontextmenu="event.preventDefault();">
+        <li id="cp">Copy</li>  
+        <li id="del">Delete</li>    
+    </ul>
+    
+
+    <div id="form_div" >
+        <form method="POST" id="send_message_form" action="">
+            {% csrf_token %}
+            <ul>
+                <li>{{form.message}}</li>
+                <li><button id="msg_btn">SEND</button></li>
+                <label for="id_file" class="btn"><button onclick="$('#id_file').click();">Select Image</button> </label>
+                <li><input type="file" name="file" id="id_file" accept="image/*" style="visibility:hidden;"></li>
+            </ul>
+
+            <br>
+            
+        </form>
+
+        <ul id="deletionForm">
+            <li> Are you sure to delete this message ?</li>
+            <li><button id="del_button">Yes,delete message</button> </li> 
+            <li><button id="dont_del_button">NO,Don't Delete</button> </li> 
+        </ul>
+
+    </div>
+
+
+
+
+    <script>
+        var message_num = '0';
+        var fetched_num = '0';
+        var current_user = '{{request.user}}';
+        var isOpenMenu = false;
+        var isOpen_delete_confirm = false;
+        var isAdded = true;
+        document.body.style.backgroundImage = 'url("/static/images/background.jpg")';
+        const main_form = $('#send_message_form');
+        const main_text = $('#id_text')
+        const main_file = $('#id_file');
+        
+        // -------------------------
+        $('#send_message_form').on('submit',submit_message);
+        // -------------------------
+        $('#send_message_form').on('keydown',function(event) {
+            if(event.shiftKey && event.keyCode == 13 )
+                return ;
+            if(event.keyCode == 13){
+                event.preventDefault();
+                if (!main_text.val() && !main_file.val()){
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url : window.location.href,
+                    data: new FormData(this),
+                    success : function(response) {
+                        main_form.trigger("reset");
+                        main_text.trigger("focus");
+                        isAdded = true;
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                })  
+            }
+
+        });
+        // -------------------------
+        function submit_message(e) {
+            e.preventDefault();
+
+            if (!main_text.val() && !main_file.val()){
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url : window.location.href,
+                data: new FormData(this),
+                success : function(response) {
+                    main_form.trigger("reset");
+                    main_text.trigger("focus");
+                    isAdded = true;
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })  
+        }
+        // -------------------------
+		function show_menu(e){
+            e.preventDefault();
+            isOpenMenu = true
+            var menu = $('#messageContextMenu');
+            var del_button  = $('#del');
+            var copy_button = $('#cp');
+            if(e.srcElement.getElementsByTagName('img')[0] || e.srcElement.tagName == 'IMG'){
+                copy_button.css('display','none');
+                menu.css('height','45px');
+            }else{
+                $('#cp').css('display','block');
+                menu.css('height','90px');
+            }
+
+            del_button.unbind().click(function(){
+                menu.css('display','none');
+                isOpenMenu = false;
+                if(e.srcElement.tagName == 'IMG')
+                    show_delete_confirm(e,e.srcElement.parentElement.id);
+                else
+                    show_delete_confirm(e,e.srcElement['id']);     
+            });
+            copy_button.unbind().click(function(){
+                menu.css('display','none');
+                isOpenMenu = false;
+                navigator.clipboard.writeText(e.srcElement.getElementsByClassName('msg')[0].innerHTML);
+            });
+            menu.css('left', e.pageX+'px');
+			menu.css('top', e.pageY+'px');
+			menu.css('display', "inline");
+		}
+        // --------------------------
+        function hide_menu() {
+		    $('#messageContextMenu').css('display','none');
+		}
+        // --------------------------
+        function show_delete_confirm(event,num){
+            if (isOpen_delete_confirm == false) {
+                isOpen_delete_confirm = true;
+                var prev_color = $('#'+num).css('background-color')
+                $('#'+num).css('background-color','#dda0dd');
+                const deletionForm = $('#deletionForm');
+                deletionForm.css('display','inline-block');
+                var h = event.pageY;
+                deletionForm.css('left' , '350px');
+                deletionForm.css('top' ,  (h-10)+'px');
+                
+                $('#del_button').unbind().click(function() {
+                    delete_message(num);
+                    hide_deletion_confirm();
+                    isOpen_delete_confirm = false;
+                });
+                $('#dont_del_button').unbind().click(function() {
+                    hide_deletion_confirm();
+                    event.srcElement.style.backgroundColor = prev_color;
+                    isOpen_delete_confirm = false;
+                });
+            }
+        }
+        // --------------------------
+        function hide_deletion_confirm(){
+            $('#deletionForm').css('display','none');
+        }
+        // --------------------------
+        function delete_message(num){
+            var url = '/delete-message/'+num+'/';
+            $.ajax({
+                type:'POST',
+                url : url,
+                data: {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                },
+            })
+        }
+        // --------------------------
+        setInterval(function() {
+                $.ajax({
+                    type:'GET',
+                    url : 'message-count/',
+                    success : function(response){
+                        fetched_num = response;
+                    }
+                })
+                // -------------------------
+                if(message_num != fetched_num){
+                    const $messages = $('#_messages');
+                    $.ajax({
+                        type:'GET',
+                        url : 'get-all-messages/',
+                        success: function(response) {
+                            response = JSON.parse(response)
+                            for (var key in response){
+                                if (key == 0)
+                                    $messages.html(''); 
+                                var output = '';
+                                if(response[key].file != 'False'){
+                                    output = '<small>"'+response[key].sender+'"</small>'+'<br>'+
+                                    '<img src="'+response[key].file+'" class="smallImg" onclick="showOriginal(this)"> <br>'+'<small>'+
+                                    response[key].sent_date.substring(0,19)+'</small>';
+                                }else{
+                                    output =  '<small>"'+response[key].sender+'"</small>'+
+                                    '<h4 class="msg">'+response[key].message+'</h4>'+'<small>'+
+                                    response[key].sent_date.substring(0,19)+'</small>';
+                                }
+                                const newElem = document.createElement('div');
+                                if(response[key].sender != current_user)
+                                    newElem.setAttribute('class','single_message_sender');
+                                else
+                                    newElem.setAttribute('class','single_message_receiver');
+                                newElem.setAttribute('data-index',key);
+                                var id = response[key].id
+                                newElem.setAttribute('id',id);
+                                newElem.oncontextmenu = function(e){ 
+                                    if(response[newElem.getAttribute('data-index')].sender != current_user){
+                                        e.preventDefault();
+                                        return;
+                                    }
+                                    !isOpenMenu && !isOpen_delete_confirm && show_menu(e);  
+                                }
+                                newElem.innerHTML = output;
+                                $messages.append(newElem);
+                            }
+                            if(isAdded){
+                                $messages.scrollTop($messages.prop("scrollHeight"));
+                                isAdded = false;
+                            }
+                            message_num = fetched_num;
+                        },
+                        error: function(response){
+                            console.log('something wrong : ',response);
+                        }
+                    });  
+                }
+                // -------------------
+                if($('#id_file').val()){
+                    $('#send_message_form textarea').css('display','none');
+                }else{
+                    $('#send_message_form textarea').css('display','block');
+                }
+                // -------------------
+
+        },1000);
+        // -------------------------
+    </script>
+
+{% endblock content %}
+
+
+
+
+
+
+
+

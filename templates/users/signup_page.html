@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+
+
+{% block title %}
+    Signup
+{% endblock title %}
+
+{% comment %} ------------------------------------- {% endcomment %}
+
+{% block content %}
+
+    <form method="POST" action="" enctype="multipart/form-data" id="profile_form">
+        <h2><u>SIGNUP</u></h2>
+        {% csrf_token %}
+        {{form.as_p}}
+        <hr>
+        <input type='submit' value='SIGNUP' class="submit_btn">
+    </form>
+
+
+{% endblock content %}
