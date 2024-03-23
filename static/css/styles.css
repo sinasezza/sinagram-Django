@@ -194,68 +194,6 @@
     line-height: 30px;
 }
 /* ------------------------- */
-#profile_form{
-    font-size: 20px;
-    border: 4px dotted black;
-    text-align: justify;
-    padding: 20px;
-    background-color: mistyrose;
-    width: 500px;
-    margin-left: 350px;
-    left: 100px;
-}
-/* ------------------------- */
-#profile_form textarea{
-    width: 300px;
-    height: 100px;
-}
-/* ------------------------- */
-#profile_form .submit_btn{
-    width: 500px;
-    height: 50px;
-    background-color: aquamarine;
-    border-radius: 45px;
-    letter-spacing: 4px;
-    font-size: 30px;
-    
-}
-/* ------------------------- */
-#profile_form .submit_btn:hover{
-    background-color: darkseagreen;
-    cursor: pointer;
-}
-/* ------------------------- */
-#login_form{
-    width: 500px;
-    height: 300px;
-    background-color: powderblue;
-    margin-left: 400px;
-    font: 30px;
-}
-/* ------------------------- */
-#login_form label{
-    font-size: 50px;
-}
-/* ------------------------- */
-#login_form input {
-    width: 190px;
-    height: 40px;
-}
-/* ------------------------- */
-#login_form button{
-    background-color: dodgerblue;
-    color: white;
-    font-size: 40px;
-    width: 140px;
-    height: 60px;
-    margin-left: 160px;
-}
-/* ------------------------- */
-#login_form button:hover{
-    background-color: lightskyblue;
-    cursor: pointer;
-}
-/* ------------------------- */
 .IntroLinks{
     width: 400px;
     height: 300px;

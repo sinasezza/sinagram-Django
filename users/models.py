@@ -19,7 +19,7 @@ class UserProfile(models.Model):
 
     # -----------------------------------
 
-    Choices = {
+    GENDER_CHOICES = {
         ('male','Male'),
         ('female','Female'),
         ('others','Others'),
@@ -37,7 +37,7 @@ class UserProfile(models.Model):
     # -----------------------------
     image         = models.ImageField(upload_to=user_directory_path, null=True , blank=True)
     # -----------------------------
-    gender        = models.CharField(max_length=6, choices=Choices, default='others')
+    gender        = models.CharField(max_length=6, choices=GENDER_CHOICES, default='others')
     # -----------------------------------
     
 

@@ -1,22 +1,30 @@
 {% extends "base/base.html" %}
 
-{% block title %}
-    Login
-{% endblock title %}
-
-{% comment %} ------------------------------------- {% endcomment %}
+{% block title %}Login{% endblock title %}
 
 {% block content %}
-    <form method="POST" action="" id="login_form">
-        <h2><u>LOGIN</u></h2>
-        {% csrf_token %}
-
-        {{form.as_p}}
-        
-        <hr><hr>
-        <button type="submit">Login</button>
-    </form>
-
-    <br><br>
-
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title mb-4">Login <span class="text-muted fs-6">(enter your credentials)</span></h2>
+          <form method="POST"  id="login_form">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" maxlength="25" name="username" id="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" maxlength="35" name="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+          <p class="mt-3">Don't have an account? <a href="{% url 'users:signup' %}">Register now</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}

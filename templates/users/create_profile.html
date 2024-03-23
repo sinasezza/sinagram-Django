@@ -1,6 +1,6 @@
-{% extends "base/base.html" %} 
+{% extends "base/base.html" %}
 
-{% block title %} Signup {% endblock title %} 
+{% block title %}Create Profile{% endblock title %}
 
 {% block content %}
   <div class="container mt-5">
@@ -92,26 +92,3 @@
     </div>
   </div>
 {% endblock content %}
-
-{% block custom_js %}
-  <script>
-    $(document).ready(function() {
-      // Function to toggle password visibility
-      $("#togglePassword").click(function() {
-        var password1 = $("#password1");
-        var password2 = $("#password2");
-        var icon = $("#password-toggle-icon");
-
-        if (password1.attr("type") === "password") {
-          password1.attr("type", "text");
-          password2.attr("type", "text");
-          icon.removeClass("fa-eye-slash").addClass("fa-eye");
-        } else {
-          password1.attr("type", "password");
-          password2.attr("type", "password");
-          icon.removeClass("fa-eye").addClass("fa-eye-slash");
-        }
-      });
-    });
-  </script>
-{% endblock custom_js %}
