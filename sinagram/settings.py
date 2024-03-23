@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # third parties
     'fontawesomefree',
     'django_browser_reload',
+    'phonenumber_field',
     
     # internals
     'users',

@@ -1,8 +1,9 @@
-from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.conf import settings
 from sinagram import utils as prj_utils
 from django.urls import reverse
+from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
 
 
@@ -10,10 +11,11 @@ from django.db import models
 class UserProfile(models.Model):
 
     def user_directory_path(instance, filename):
-        year  = datetime.date.today().year
-        month = datetime.date.today().month
-        day   = datetime.date.today().day
-        return 'users/img/{0}/{1}/{2}/{3}/{4}'.format(year,month,day,instance.user.username,filename)
+        now = timezone.now()
+        year = now.year
+        month = now.month
+        day = now.day
+        return 'users/img/{0}/{1}/{2}/{3}/{4}'.format(year, month, day, instance.user.username, filename)
 
     # -----------------------------------
 
@@ -33,11 +35,10 @@ class UserProfile(models.Model):
     # -----------------------------
     phone_number  = models.CharField(max_length=11, unique=True,)
     # -----------------------------
-    image         = models.ImageField(upload_to= user_directory_path, null=True , blank=True)
+    image         = models.ImageField(upload_to=user_directory_path, null=True , blank=True)
     # -----------------------------
     gender        = models.CharField(max_length=6, choices=Choices, default='others')
     # -----------------------------------
-    contacts = models.ManyToManyField(to='UserProfile', blank=True)
     
 
     def get_panel_url(self):
@@ -70,3 +71,28 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+class Contact(models.Model):
+    fname = models.CharField(max_length=20)
+    # -----------------------------------
+    lname = models.CharField(max_length=20, blank=True, null=True)
+    # -----------------------------------
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    # -----------------------------------
+    phone = PhoneNumberField() 
+    # -----------------------------------
+    contact_saver = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='my_contacts', blank=True, null=True)
+    # -----------------------------------
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
+    # -----------------------------------
+
+    class Meta:
+        ordering = ['fname']
+
+    def __str__(self):
+        return f""
+    
+    @property
+    def full_name(self):
+        return f"{self.fname} {self.lname or ''}"
+
+# ------------------------------------

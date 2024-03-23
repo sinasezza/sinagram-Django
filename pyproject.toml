@@ -27,6 +27,7 @@ urllib3 = "2.2.0"
 poetry-plugin-export = "^1.7.1"
 fontawesomefree = "^6.5.1"
 django-browser-reload = "^1.12.1"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.3.0"}
 
 
 [build-system]
