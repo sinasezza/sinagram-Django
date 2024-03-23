@@ -24,6 +24,8 @@ urlpatterns = [
     path('', views.index_view, name='index'),
     path('users/', include('users.urls', namespace='users')),
     path('messenger/', include('messenger.urls', namespace='messenger')),
+    
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 
