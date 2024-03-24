@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -15,9 +16,11 @@ def signup_view(request):
             messages.success(request, 'Account registered successfully')
             return redirect('users:login')
         else:
-            messages.error(request, 'Form is not valid')
+            print(f"form error : {form.errors.as_data()}")
+            messages.error(request, 'error in form fields')
     else:
         form = forms.SignupForm()
+
 
     return render(request, 'users/signup_page.html', {'form': form})
 
@@ -30,18 +33,18 @@ def login_view(request):
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(request,username=cd['username'],password=cd['password'])
+            user = authenticate(request, username=cd['username'], password=cd['password'])
             if user is not None:
                 if user.is_active:
                     login(request,user)
                     messages.success(request,'hello {}'.format(user.username))
-                    return redirect('messenger:main_page')
+                    return redirect('index') if models.UserProfile.objects.filter(user=user).exists() else redirect('users:create-profile')
                 else:
                     messages.error(request,'user in not active')
-                    return redirect('messenger:login')
+                    return redirect('index')
             else :
                 messages.error(request,'username or password is wrong')
-                return redirect('messenger:login')
+                # form  = forms.LoginForm()
     else :
         form = forms.LoginForm()
 
@@ -53,7 +56,7 @@ def login_view(request):
 
 # ======================================
 
-@login_required(login_url='messenger:login')
+@login_required(login_url='users:login')
 def Logout_view(request):
     logout(request)
     return redirect('users:login')
@@ -62,7 +65,29 @@ def Logout_view(request):
 
 @login_required(login_url='users:login')
 def create_profile_view(request):
-    return render(request,  'users/create_profile.html')
+    try:
+        profile = models.UserProfile.objects.get(user=request.user)
+    except:
+        profile = None
+        
+    if request.method == 'POST':
+        form = forms.UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            messages.success(request,"Your Profile has been created")
+            return redirect('index')
+        else:
+            messages.error(request, "Please correct the error below.")
+    else:            
+        form = forms.UserProfileForm(instance=profile)
+        
+    context = {
+        'form': form,
+    }
+    
+    return render(request,  'users/create_profile.html', context)
 
 # ======================================
 
@@ -74,7 +99,8 @@ def create_profile_view(request):
 
 # ======================================
 
-@login_required(login_url='messenger:login')
+@login_required(login_url='users:login')
+@decorators.profile_required
 def panel_view(request,username):
     user = User.objects.get(username__exact = username)
     usr = models.Account.objects.get(user__exact = user)
@@ -85,7 +111,8 @@ def panel_view(request,username):
 
 # ======================================
 
-@login_required(login_url='messenger:login')
+@login_required(login_url='users:login')
+@decorators.profile_required
 def change_account_info_view(request,username):
     account = models.Account.objects.get(user__exact = request.user)
     if request.method == 'POST':
@@ -168,7 +195,8 @@ def delete_user_view(request,username):
 
 # ======================================
 
-@login_required(login_url= 'messenger:login')
+@login_required(login_url= 'users:login')
+@decorators.profile_required
 def contact_list_view(request,username):
     usr = models.Account.objects.get(user__exact = request.user)
     contacts = models.Contact.objects.filter(Account_id__exact = request.user.id)
@@ -180,7 +208,8 @@ def contact_list_view(request,username):
  
 # ======================================
 
-@login_required(login_url='messenger:login')
+@login_required(login_url='users:login')
+@decorators.profile_required
 def contact_detail_view(request,username,name,id):
     contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
     try:
@@ -200,7 +229,8 @@ def contact_detail_view(request,username,name,id):
         
 # ======================================
 
-@login_required(login_url= 'messenger:login')
+@login_required(login_url= 'users:login')
+@decorators.profile_required
 def add_contact_view(request,username):
     
     usr = models.Account.objects.get(user__exact = request.user)
@@ -227,7 +257,8 @@ def add_contact_view(request,username):
 
 # ======================================
 
-@login_required(login_url= 'messenger:login')
+@login_required(login_url= 'users:login')
+@decorators.profile_required
 def change_contact_info_view(request,username,name,id):
     usr = models.Account.objects.get(user__exact =request.user)
     contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
@@ -263,7 +294,8 @@ def change_contact_info_view(request,username,name,id):
 
 # ======================================
 
-@login_required(login_url= 'messenger:login')
+@login_required(login_url= 'users:login')
+@decorators.profile_required
 def delete_contact_view(request,username,name,id):
     usr = models.Account.objects.get(user__exact =request.user)
     contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)

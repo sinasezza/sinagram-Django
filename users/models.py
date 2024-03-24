@@ -33,7 +33,7 @@ class UserProfile(models.Model):
     # -----------------------------
     about         = models.TextField(max_length=500, null=True, blank=True)
     # -----------------------------
-    phone_number  = models.CharField(max_length=11, unique=True,)
+    phone_number  = models.CharField(max_length=13, unique=True,)
     # -----------------------------
     image         = models.ImageField(upload_to=user_directory_path, null=True , blank=True)
     # -----------------------------

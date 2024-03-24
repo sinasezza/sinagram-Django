@@ -2,7 +2,7 @@ from typing import Any
 from django import forms
 from . import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
+from phonenumber_field.formfields import PhoneNumberField
 
 class SignupForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -24,22 +24,28 @@ class SignupForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if (User.objects.filter(username=username).exists()):
-            raise forms.ValidationError("The username is already taken. please  choose a different one.")
+            raise forms.ValidationError('The username is already taken. please  choose a different one.')
         return username
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if password1 and len(password1) < 8:
+            raise forms.ValidationError('Your password must be at least 8 characters long.')
+        return password1
     
-    def clean(self) -> dict[str, Any]:
-        cleaned_data = self.cleaned_data
-        
-        pass1 = cleaned_data.get('password1')
-        pass2 = cleaned_data.get('password2')
-        
-        if len(pass1) < 8:
-            raise forms.ValidationError("password should be at least 8 characters.")
-        if pass1 != pass2:
-            raise forms.ValidationError("passwords not match!")
-        
-        return cleaned_data
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError('passwords not math.')
+        return password2
     
+    def save(self, commit: bool = True) -> Any:
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data.get('password1'))
+        if commit:
+            user.save()
+        return user
 
     # -----------------------------------
 
@@ -47,9 +53,9 @@ class SignupForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     gender = forms.ChoiceField(label='gender', choices=models.UserProfile.GENDER_CHOICES, required=False)
     # -----------------------------------
-    age = forms.CharField(label='age',required=False)
+    age = forms.CharField(label='age', required=False, widget=forms.NumberInput(attrs={'type':'number', 'min': 0, 'max': 99}))
     # -----------------------------------
-    phone_number = forms.CharField(max_length=11 , label='phone number',widget=forms.TextInput(attrs={'placeholder':'required'}))
+    phone_number = PhoneNumberField(max_length=13 , label='phone number',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
     photo = forms.ImageField(widget=forms.FileInput(),label='photo' , required=False)
     # -----------------------------------
@@ -60,24 +66,12 @@ class UserProfileForm(forms.ModelForm):
         model = models.UserProfile
         fields = ('gender', 'phone_number', 'age', 'about', 'photo',)
 
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if len(email) == 0:
-            return email
-            
-        for user in User.objects.all():
-            if email == user.email:
-                raise forms.ValidationError('this email is already used , please enter another email')
-        return email
-    
     # -----------------------------------
 
     def clean_phone_number(self):
         phone_num = self.cleaned_data.get('phone_number')
-        for user in models.Account.objects.all() :
-            if phone_num == user.user_phone_number:
-                raise forms.ValidationError('the phone number entered is exists , enter another')
+        if models.UserProfile.objects.filter(phone_number=phone_num).exists() :
+            raise forms.ValidationError('the phone number entered is exists , enter another')
         return phone_num
 
     # -----------------------------------

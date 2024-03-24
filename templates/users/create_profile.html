@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
+{% load crispy_forms_tags %}
 
-{% block title %}Create Profile{% endblock title %}
+{% block title %}complete Profile{% endblock title %}
 
 {% block content %}
   <div class="container mt-5">
@@ -9,7 +10,7 @@
         <div class="card">
           <div class="card-body">
             <h2 class="card-title mb-4 text-center">
-              Signup
+              Please Complete Your Profile
             </h2>
             <form
               method="POST"
@@ -18,73 +19,8 @@
               id="profile_form"
             >
               {% csrf_token %}
-              <div class="mb-3">
-                <input
-                  type="text"
-                  name="username"
-                  class="form-control"
-                  placeholder="Username"
-                  required
-                  maxlength="25"
-                />
-              </div>
-              <div class="mb-3">
-                <input
-                  type="text"
-                  name="first_name"
-                  class="form-control"
-                  placeholder="First Name"
-                  required
-                  maxlength="20"
-                />
-              </div>
-              <div class="mb-3">
-                <input
-                  type="text"
-                  name="last_name"
-                  class="form-control"
-                  placeholder="Last Name"
-                  required
-                  maxlength="20"
-                />
-              </div>
-              <div class="mb-3">
-                <input
-                  type="email"
-                  name="email"
-                  class="form-control"
-                  placeholder="Email"
-                  maxlength="80"
-                />
-              </div>
-              <div class="mb-3">
-                <div class="input-group">
-                  <input
-                    type="password"
-                    name="password1"
-                    id="password1"
-                    class="form-control"
-                    placeholder="Password"
-                    required
-                    maxlength="35"
-                  />
-                  <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                    <i class="fa fa-eye-slash" id="password-toggle-icon"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="mb-3">
-                <input
-                  type="password"
-                  name="password2"
-                  id="password2"
-                  class="form-control"
-                  placeholder="Confirm Password"
-                  required
-                  maxlength="25"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary">Signup</button>
+              {{ form|crispy }}
+              <button type="submit" class="btn btn-primary">submit</button>
             </form>
           </div>
         </div>
@@ -92,3 +28,11 @@
     </div>
   </div>
 {% endblock content %}
+
+{% block custom_js %}
+  <script>
+    $(document).ready(function() {
+      
+    });
+  </script>
+{% endblock custom_js %}
