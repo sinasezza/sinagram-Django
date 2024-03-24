@@ -1,10 +1,8 @@
-function remove()
-{
-    let elem = document.getElementById('messages') || null
-    if (elem != null){
-        elem.remove()
-    } 
-}
+$(document).ready(function() {
+    $(".btn-close").click(function() {
+      $(this).closest(".alert").alert("close");
+    });
+});
 
 // -----------------------------------------
 function showOriginal(img){

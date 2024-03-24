@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "a minimal messenger like telegram!"
 authors = ["sinasezza <s.e.sezza121@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -28,6 +29,8 @@ poetry-plugin-export = "^1.7.1"
 fontawesomefree = "^6.5.1"
 django-browser-reload = "^1.12.1"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.3.0"}
+crispy-bootstrap5 = "^2024.2"
+django-crispy-forms = "^2.1"
 
 
 [build-system]

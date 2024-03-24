@@ -20,15 +20,44 @@
 
   <body>
     {% include "partials/navbar.html" %}
+
+    {% if messages %}
+      <div id="messages-box" class="container mt-4">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="alert alert-dismissible">
+              <ul class="list-unstyled">
+                {% for message in messages %}
+                  <li 
+                    class="alert alert-dismissible fade show
+                    {% if message.tags == 'info' %} alert-info
+                    {% elif message.tags == 'success' %} alert-success
+                    {% elif message.tags == 'error' %} alert-danger
+                    {% elif message.tags == 'warning' %} alert-warning
+                    {% endif %} 
+                    " 
+                    role="alert">
+                    {{ message | safe }}
+                    <button type="button" class="btn-close" aria-label="Close"></button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  
+  
     {% block content %} {% endblock content %}
 
     {% include "partials/footer.html" %}
 
 
-    <script src="{% static 'javascript/script.js' %}"></script>
+    <script src="{% static 'javascript/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
-    <script src="{% static 'javascript/jquery.min.js' %}"></script>
+    <script src="{% static 'javascript/script.js' %}"></script>
     {% block custom_js %} {% endblock custom_js %}
   </body>
 </html>

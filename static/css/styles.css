@@ -1,233 +1,220 @@
 /* ------------------------- */
-#messages {
-    background-color: darkturquoise;
-    font-size: 20px;
-    font-family: monospace;
-    margin : 20px;
-    width : 800px;
-    text-align: center;
+#add_contact_form {
+  text-align: left;
+  background-color: blanchedalmond;
+  text-shadow: 10px;
+  font-size: 20px;
 }
 /* ------------------------- */
-#add_contact_form{
-    text-align: left;
-    background-color: blanchedalmond;
-    text-shadow: 10px;
-    font-size: 20px;
+#add_contact_form label {
+  width: 250px;
+  height: 50px;
+  display: inline-block;
 }
 /* ------------------------- */
-#add_contact_form label{
-    width: 250px;
-    height: 50px;
-    display: inline-block;
-    
-}
-/* ------------------------- */
-#add_contact_form .submit_btn{
-    margin-left: 5px;
-    width: 150px;
-    font-size: 30px;
-
+#add_contact_form .submit_btn {
+  margin-left: 5px;
+  width: 150px;
+  font-size: 30px;
 }
 
 #_messages {
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior-y: contain;
-    width: 700px;
-    height: 650px;
-    background-color: #f5deb3;
-    margin-left: 300px;
-    overflow: auto;
-    white-space: nowrap;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  width: 700px;
+  height: 650px;
+  background-color: #f5deb3;
+  margin-left: 300px;
+  overflow: auto;
+  white-space: nowrap;
 }
 /* ------------------------- */
 .single_message_sender {
-    margin: 10px 10px;
-    width: 300px;
-    border: 2px double lightsalmon;
-    background-color: rgb(248, 202, 186);
-    padding: 5px;
+  margin: 10px 10px;
+  width: 300px;
+  border: 2px double lightsalmon;
+  background-color: rgb(248, 202, 186);
+  padding: 5px;
 }
 /* ------------------------- */
 .single_message_receiver {
-    
-    margin: 10px 10px 10px 350px;
-    width: 300px;
-    border: 2px double rgb(228, 152, 121);
-    background-color: pink;
-    padding: 5px;
-    
+  margin: 10px 10px 10px 350px;
+  width: 300px;
+  border: 2px double rgb(228, 152, 121);
+  background-color: pink;
+  padding: 5px;
 }
 /* ------------------------- */
 #messageContextMenu {
-    display : none;
-    list-style : none;
-    position : absolute;
-    z-index : 999;
-    box-shadow : 5px 5px 5px gray;
-    width : 200px;
-    height : 140px;
-    border : 1px solid gray;
-    background-color : rgb(234 , 231 , 245);
-    padding : 0px;
-    font-family : verdana;
+  display: none;
+  list-style: none;
+  position: absolute;
+  z-index: 999;
+  box-shadow: 5px 5px 5px gray;
+  width: 200px;
+  height: 140px;
+  border: 1px solid gray;
+  background-color: rgb(234, 231, 245);
+  padding: 0px;
+  font-family: verdana;
 }
 /* ------------------------- */
-#messageContextMenu li {  
-    height : 30px;
-    border-bottom : 1px solid silver;
-    padding-top : 15px;
-    padding-left : 20px;
+#messageContextMenu li {
+  height: 30px;
+  border-bottom: 1px solid silver;
+  padding-top: 15px;
+  padding-left: 20px;
 }
 /* ------------------------- */
 #messageContextMenu li:hover {
-    background-color : orange;
-    cursor : pointer;
+  background-color: orange;
+  cursor: pointer;
 }
 /* ------------------------- */
 #deletionForm {
-    display : none;
-    width : 600px;
-    height : 55px;
-    position : absolute;
-    text-align: center;
-    z-index : 999;
-    background-color : rgb(201, 209, 196);
-    opacity : 0.8;
-    left : 0px;
-    top : 0px;
+  display: none;
+  width: 600px;
+  height: 55px;
+  position: absolute;
+  text-align: center;
+  z-index: 999;
+  background-color: rgb(201, 209, 196);
+  opacity: 0.8;
+  left: 0px;
+  top: 0px;
 }
 /* ------------------------- */
 #deletionForm li:first-child {
-    display: block;
-    text-align: left;
-    margin: 0px;
-    padding-left: 10px;
-    font-weight: bold;   
+  display: block;
+  text-align: left;
+  margin: 0px;
+  padding-left: 10px;
+  font-weight: bold;
 }
 /* ------------------------- */
 #deletionForm li {
-    display: inline;
-    margin: 10px 30px;
+  display: inline;
+  margin: 10px 30px;
 }
 /* ------------------------- */
 #deletionForm button:hover {
-    background-color: aquamarine;
-    cursor: pointer;
+  background-color: aquamarine;
+  cursor: pointer;
 }
 /* ------------------------- */
 #form_div {
-    width: 800px;
-    margin-left: 300px;
-
+  width: 800px;
+  margin-left: 300px;
 }
 /* ------------------------- */
-#form_div li{
-    display: inline;
-    list-style-type: none;
+#form_div li {
+  display: inline;
+  list-style-type: none;
 }
 /* ------------------------- */
-.smallImg{
-    width   : 300px;
-    height  : 168px;
-    margin: 2px;
+.smallImg {
+  width: 300px;
+  height: 168px;
+  margin: 2px;
 }
 /* ------------------------- */
-#mask{
-    display : none;
-    width : 100%;
-    height : 100%;
-    position : absolute;
-    z-index : 999;
-    background-color : black;
-    opacity : 0.6;
-    left : 0px;
-    top : 0px;
+#mask {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+  background-color: black;
+  opacity: 0.6;
+  left: 0px;
+  top: 0px;
 }
 /* ------------------------- */
-#edit_contact_form{
-    left: 45px;
-    font-size: 40px;
-    border: 4px dashed beige;
+#edit_contact_form {
+  left: 45px;
+  font-size: 40px;
+  border: 4px dashed beige;
 }
 /* ------------------------- */
-#edit_contact_form #submit_btn{
-    font-size: 60px;
-    background-color: cornflowerblue;
-    color: white;
+#edit_contact_form #submit_btn {
+  font-size: 60px;
+  background-color: cornflowerblue;
+  color: white;
 }
 /* ------------------------- */
-#edit_contact_form #submit_btn:hover{
-    cursor: pointer;
+#edit_contact_form #submit_btn:hover {
+  cursor: pointer;
 }
 /* ------------------------- */
-#edit_contact_form p label{
-    margin: 10px;
+#edit_contact_form p label {
+  margin: 10px;
 }
 /* ------------------------- */
-#edit_contact_form p input{
-    margin-left: 20px;
+#edit_contact_form p input {
+  margin-left: 20px;
 }
 /* ------------------------- */
-#contact_list{
-    background-color: lavenderblush;
-    left: 45px;
-    font-size: 50px;
-    padding: 10px;
+#contact_list {
+  background-color: lavenderblush;
+  left: 45px;
+  font-size: 50px;
+  padding: 10px;
 }
 /* ------------------------- */
-#contact_list ul{
-    list-style-type: decimal;
-    border: 4px double black;
-    margin: 15px;
-    padding: 5px;
+#contact_list ul {
+  list-style-type: decimal;
+  border: 4px double black;
+  margin: 15px;
+  padding: 5px;
 }
 /* ------------------------- */
-#contact_list ul li{
-    border-bottom: 2px solid blue;
-    margin-left: 50px;
+#contact_list ul li {
+  border-bottom: 2px solid blue;
+  margin-left: 50px;
 }
 /* ------------------------- */
-.profile{
-    background-color: lemonchiffon;
-    font-size: 20px;
-    line-height: 30px;
+.profile {
+  background-color: lemonchiffon;
+  font-size: 20px;
+  line-height: 30px;
 }
 /* ------------------------- */
-.IntroLinks{
-    width: 400px;
-    height: 300px;
-    background-color: antiquewhite;
-    font-size: 20px;
+.IntroLinks {
+  width: 400px;
+  height: 300px;
+  background-color: antiquewhite;
+  font-size: 20px;
 }
 /* ------------------------- */
-#contact_detail{
-    background-color: #f5deb3;
-    font-size: 25px;
+#contact_detail {
+  background-color: #f5deb3;
+  font-size: 25px;
 }
 /* ------------------------- */
-.editOptions{
-    font-size: 25px;
+.editOptions {
+  font-size: 25px;
 }
 /* ------------------------- */
-#contact_detail button{
-    margin-left: 20px;
-    width: 220px;
-    height: 100px;
-    font-size: 30px;
-    background-color: floralwhite;
-    margin-bottom: 20px;
-    border-radius: 40px;
+#contact_detail button {
+  margin-left: 20px;
+  width: 220px;
+  height: 100px;
+  font-size: 30px;
+  background-color: floralwhite;
+  margin-bottom: 20px;
+  border-radius: 40px;
 }
 /* ------------------------- */
-#contact_detail button:hover{
-    background-color: darkturquoise;
-    cursor: pointer;
+#contact_detail button:hover {
+  background-color: darkturquoise;
+  cursor: pointer;
 }
 /* ------------------------- */
-#edit_contact_form #submit_btn{
-    width: 250px;
-    border-radius: 30px;
-    margin-left: 20px;
-    margin: 10px;
+#edit_contact_form #submit_btn {
+  width: 250px;
+  border-radius: 30px;
+  margin-left: 20px;
+  margin: 10px;
 }
+/* ------------------------- */

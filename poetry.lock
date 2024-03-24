@@ -285,6 +285,24 @@ files = [
 ]
 
 [[package]]
+name = "crispy-bootstrap5"
+version = "2024.2"
+description = "Bootstrap5 template pack for django-crispy-forms"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "crispy-bootstrap5-2024.2.tar.gz", hash = "sha256:7d1fa40c6faf472e30e85c72551a3d2c9eedbf0abfff920683315e4e6f670f2b"},
+    {file = "crispy_bootstrap5-2024.2-py3-none-any.whl", hash = "sha256:3867e320920a6ef156e94f9e0f06a80344c453e1b3bd96cd9dc0522ae9e9afb8"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+django-crispy-forms = ">=2"
+
+[package.extras]
+test = ["pytest", "pytest-django"]
+
+[[package]]
 name = "cryptography"
 version = "42.0.5"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -383,6 +401,20 @@ files = [
 [package.dependencies]
 asgiref = ">=3.6"
 Django = ">=3.2"
+
+[[package]]
+name = "django-crispy-forms"
+version = "2.1"
+description = "Best way to have Django DRY forms"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-crispy-forms-2.1.tar.gz", hash = "sha256:4d7ec431933ad4d4b5c5a6de4a584d24613c347db9ac168723c9aaf63af4bb96"},
+    {file = "django_crispy_forms-2.1-py3-none-any.whl", hash = "sha256:d592044771412ae1bd539cc377203aa61d4eebe77fcbc07fbc8f12d3746d4f6b"},
+]
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "django-phonenumber-field"
@@ -710,7 +742,6 @@ files = [
     {file = "msgpack-1.0.8-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:5fbb160554e319f7b22ecf530a80a3ff496d38e8e07ae763b9e82fadfe96f273"},
     {file = "msgpack-1.0.8-cp39-cp39-win32.whl", hash = "sha256:f9af38a89b6a5c04b7d18c492c8ccf2aee7048aff1ce8437c4683bb5a1df893d"},
     {file = "msgpack-1.0.8-cp39-cp39-win_amd64.whl", hash = "sha256:ed59dd52075f8fc91da6053b12e8c89e37aa043f8986efd89e61fae69dc1b011"},
-    {file = "msgpack-1.0.8-py3-none-any.whl", hash = "sha256:24f727df1e20b9876fa6e95f840a2a2651e34c0ad147676356f4bf5fbb0206ca"},
     {file = "msgpack-1.0.8.tar.gz", hash = "sha256:95c02b0e27e706e48d0e5426d1710ca78e0f0628d6e89d5b5a5b91a5f12274f3"},
 ]
 
@@ -1413,4 +1444,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2e5ab69cdacabfc020e5aeea09777f8971b13e7d265f89becf4d06618c048070"
+content-hash = "b2bdddb516ad23cdd0552cf80312f67ac84d306c4890af60e8eb30f6cc9a8873"

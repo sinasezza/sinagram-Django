@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'django_browser_reload',
     'phonenumber_field',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    
     
     # internals
     'users',
@@ -118,4 +121,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-DEFAULT_ID_LENGTH = 9
+DEFAULT_ID_LENGTH = 13
+
+
+### crispy forms settings
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
