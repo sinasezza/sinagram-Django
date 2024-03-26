@@ -1,44 +1,43 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-    {{user.username}}
+  {{ user.username }}
 {% endblock title %}
 
-
-{% comment %} ------------------------------------- {% endcomment %}
-
-
 {% block content %}
-    
-    <div class="profile">
-        first name : {{user.first_name}}
-        <br>
-        last name  : {{user.last_name}}
-        <br>
-        age : {{profile.age}}
-        <br>
-        phone number : {{profile.phone_number}}
-        <br>
-        ssn : {{profile.ssn}}
-        <br>
-        about : {{profile.about}}
-        <br>
-        email : {{user.email}}
-        <br>
-        {% if profile.photo %}
-             photo : <img src="{{profile.photo.url}}" onclick="showOriginal(this)" alt="profile photo" width="150px" height="170px" >
-        {% else %}
-            photo : There is no photo
-        {% endif %}
-        <br>
+<div id="mask" onclick="hideImg()"></div>
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>{{ user.username }}</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">First Name: {{ user.first_name }}</li>
+            <li class="list-group-item">Last Name: {{ user.last_name }}</li>
+            <li class="list-group-item">Age: {{ profile.age }}</li>
+            <li class="list-group-item">Phone Number: {{ profile.phone_number }}</li>
+            <li class="list-group-item">About: {{ profile.about }}</li>
+            <li class="list-group-item">Email: {{ user.email }}</li>
+            {% if profile.image %}
+              <li class="list-group-item">Image: <img src="{{ profile.image.url }}" class="img-fluid" onclick="showOriginal(this)" alt="profile image" width="150px" height="170px"></li>
+            {% else %}
+              <li class="list-group-item">Image: There is no image</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
     </div>
-
-    <div id="mask" onclick="hideImg()"></div>
-
-    <div class="editOptions">
-        <a href="{{profile.get_panel_edit_url}}">Edit</a> | 
-        <a href="{{profile.get_panel_delete_url}}/delete-user">Delete</a>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="d-flex justify-content-left align-items-center">
+        <a href="{{ profile.get_panel_edit_url }}" class="btn btn-primary mx-2">Edit</a>
+        <a href="{{ profile.get_panel_delete_url }}/delete-user" class="btn btn-danger mx-2">Delete</a>
+      </div>
     </div>
-
-
+  </div>
+</div>
 {% endblock content %}

@@ -15,6 +15,7 @@
     <h2><u>Change Account Info</u></h2>
     <form method='POST' enctype="multipart/form-data" class="container my-3" id="profile_form">
         {% csrf_token %}
+        <input type="hidden" name="prev_id" value="{{request.user.id}}">
         {{ form|crispy }}
         <input type='submit' class="btn btn-primary" value='UPDATE' class="update_btn">
     </form>

@@ -1,8 +1,9 @@
 from typing import Any
 from django import forms
-from . import models
 from django.contrib.auth.models import User
 from phonenumber_field.formfields import PhoneNumberField
+from django.db.models import Q
+from . import models
 
 class SignupForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -55,16 +56,16 @@ class UserProfileForm(forms.ModelForm):
     # -----------------------------------
     age = forms.CharField(label='age', required=False, widget=forms.NumberInput(attrs={'type':'number', 'min': 0, 'max': 99}))
     # -----------------------------------
-    phone_number = PhoneNumberField(max_length=13 , label='phone number',widget=forms.TextInput(attrs={'placeholder':'required'}))
+    phone_number = PhoneNumberField(max_length=13, label='phone number',widget=forms.TextInput(attrs={'placeholder':'required'}))
     # -----------------------------------
-    photo = forms.ImageField(widget=forms.FileInput(),label='photo' , required=False)
+    image = forms.ImageField(widget=forms.FileInput(),label='image' , required=False)
     # -----------------------------------
-    about = forms.CharField(label='about',widget=forms.Textarea(),required=False)
+    about = forms.CharField(label='about', widget=forms.Textarea(), required=False)
     # -----------------------------------
     
     class Meta:
         model = models.UserProfile
-        fields = ('gender', 'phone_number', 'age', 'about', 'photo',)
+        fields = ('gender', 'phone_number', 'age', 'about', 'image',)
 
     # -----------------------------------
 
@@ -91,6 +92,9 @@ class LoginForm(forms.Form):
 
 class AccountChangeInfoForm(forms.ModelForm):
 
+    # phone_number = PhoneNumberField(max_length=13, label='phone number', widget=forms.TextInput(attrs={'placeholder':'required'}))
+
+    
     class Meta:
         model = models.UserProfile
         fields = ('age', 'about', 'phone_number', 'gender', 'image')
@@ -98,8 +102,8 @@ class AccountChangeInfoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AccountChangeInfoForm, self).__init__(*args, **kwargs)
         # Add user-related fields from the User model
-        self.fields['username'] = forms.CharField(label='Username', initial=self.instance.user.username, disabled=True)
-        self.fields['email'] = forms.EmailField(label='Email', initial=self.instance.user.email, disabled=True)
+        self.fields['username'] = forms.CharField(label='Username', initial=self.instance.user.username, disabled=True,)
+        self.fields['email'] = forms.EmailField(label='Email', initial=self.instance.user.email)
         self.fields['first_name'] = forms.CharField(label='First Name', initial=self.instance.user.first_name)
         self.fields['last_name'] = forms.CharField(label='Last Name', initial=self.instance.user.last_name)
 
@@ -114,40 +118,31 @@ class AccountChangeInfoForm(forms.ModelForm):
         return user_profile
         
 
-
-
-    def clean_new_username(self):
-        username = self.cleaned_data.get('new_username')
-        user_id = self.cleaned_data.get('user_id')
-        for user in User.objects.exclude(id__exact = user_id):
-            if username == user.username :
-                raise forms.ValidationError('this username is already exist , enter another')
-        return username
-
-    # -----------------------------------
-
-    def clean_new_email(self):
-        email = self.cleaned_data.get('new_email')
-        theusername = self.cleaned_data.get('new_username')
-        for user in User.objects.exclude(username__exact = theusername):
-            if email == user.email :
-                raise forms.ValidationError('this email is already used , please enter another email')
-        return email
+    def clan(self):
+        cleaned_data = self.cleaned_data 
+        username = cleaned_data.get('username')
+        prev_id = cleaned_data.get('prev_id')
+        email = cleaned_data.get('email')
+        phone_num = cleaned_data.get('phone_number')
         
+        print(f"username is {username}")
+        print(f"prev_id is {prev_id}")
+        print(f'email is {email}')
+        print(f'phone number is {phone_num}')
+
+        if User.objects.filter(username=username).exclude(id__exact=prev_id).exists():
+            raise forms.ValidationError('this username is already exist , enter another')
+
+        if User.objects.filter(email=email).exclude(user_id=prev_id).exists():
+            raise forms.ValidationError('this email is already used , please enter another email')
+
+        if models.UserProfile.objects.filter(phone_number=phone_num).exclude(user_id=prev_id).exists():
+            raise forms.ValidationError('the phone number entered is exists , enter another')
+
+        return cleaned_data        
     # -----------------------------------
 
-    def clean_new_phone_number(self):
-        phone_num = self.cleaned_data.get('new_phone_number')
-        theuserid = self.cleaned_data.get('user_id')
-        for user in models.Account.objects.exclude(id__exact = theuserid):
-            if phone_num == user.user_phone_number:
-                raise forms.ValidationError('the phone number entered is exists , enter another')
-        return phone_num
-        
-    # -----------------------------------
 
-
-# ======================================
 # ======================================
 
 
@@ -157,7 +152,6 @@ class DeleteUserForm(forms.Form):
     
 
 # ======================================
-# ======================================
 
 
 class LogoutForm(forms.Form):
@@ -165,7 +159,6 @@ class LogoutForm(forms.Form):
     yes = forms.CharField(widget=forms.HiddenInput(attrs={'value':'1'}) ,label='yes',required=True)
 
 
-# ======================================
 # ======================================
 
 
@@ -192,7 +185,6 @@ class AddContactForm(forms.Form):
 
 
 # ======================================
-# ======================================
 
 
 class DeleteContactForm(forms.Form):
@@ -200,7 +192,6 @@ class DeleteContactForm(forms.Form):
     yes = forms.CharField(widget=forms.HiddenInput(attrs={'value':'1',}) ,label='yes',required=False)
     
 
-# ======================================
 # ======================================
 
 class ContactChangeInfo(forms.Form):
