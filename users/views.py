@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -101,69 +101,41 @@ def create_profile_view(request):
 
 @login_required(login_url='users:login')
 @decorators.profile_required
-def panel_view(request,username):
-    user = User.objects.get(username__exact = username)
-    usr = models.Account.objects.get(user__exact = user)
+def panel_view(request, username = None):
+    if not username:
+        profile = models.UserProfile.objects.get(user=request.user)
+        user = request.user
+    else:
+        profile = get_object_or_404(models.UserProfile, user__username=username)
+        user = get_object_or_404(User, username=username)
+
     context = {
-        'usr':usr,
+        'user': user,
+        'profile': profile,
     }
-    return render(request,'messenger_pages/panel.html',context)
+    return render(request,'users/panel.html',context)
 
 # ======================================
 
 @login_required(login_url='users:login')
 @decorators.profile_required
-def change_account_info_view(request,username):
-    account = models.Account.objects.get(user__exact = request.user)
+def change_account_info_view(request):
+    profile = models.UserProfile.objects.get(user__exact = request.user)
     if request.method == 'POST':
-        form = forms.AccountChangeInfoForm(request.POST,request.FILES)
+        form = forms.AccountChangeInfoForm(request.POST,request.FILES, instance=profile)
         if form.is_valid():    
-            cd = form.cleaned_data      
-            if not account.user.check_password(cd['old_password']):
-                messages.error(request,'the password is wrong')
-                return redirect('messenger:change_info',request.user.username)
-            elif cd['new_password1'] != cd['new_password2'] :
-                messages.error(request,'new passwords is not same')
-                return redirect('messenger:change_info',request.user.username)
-            else:
-                account.user.set_password(cd['new_password1'])
-                account.user.username   = cd['new_username']
-                account.user.first_name = cd['new_first_name']
-                account.user.last_name  = cd['new_last_name']
-                account.user.email      = cd['new_email']
-                account.user.save()
-                
-                account.user_phone_number   = cd['new_phone_number']
-                account.user_gender         = cd['new_gender']
-                account.user_age            = cd['new_age']
-                account.user_ssn            = cd.get('new_ssn',account.user_ssn)
-                if request.FILES.get('new_photo',None) is not None:
-                    account.user_photo          = request.FILES.get('new_photo',False)
-                account.user_about          = cd['new_about']
-                account.save()
-
-                login(request,User.objects.get(username__exact=username))
-                messages.success(request,'updated successfully')
-                return redirect(account.get_panel_url())  
-
+            updated_profile = form.save()
+            messages.success(request,'updated successfully')
+            return redirect(profile.get_panel_url())  
         else:
             messages.error(request,'form is not valid')
-            return render(request,'forms/change_account_info.html',{'form':form,})
-    
     else:
-        form = forms.AccountChangeInfoForm()
-        form.fields['user_id'].initial          = request.user.id
-        form.fields['new_username'].initial     = account.user.username
-        form.fields['new_first_name'].initial   = account.user.first_name
-        form.fields['new_last_name'].initial    = account.user.last_name
-        form.fields['new_email'].initial        = account.user.email
-        form.fields['new_phone_number'].initial = account.user_phone_number
-        form.fields['new_gender'].initial       = account.user_gender
-        form.fields['new_age'].initial          = account.user_age
-        form.fields['new_ssn'].initial          = account.user_ssn
-        form.fields['new_photo'].initial        = account.user_photo
-        form.fields['new_about'].initial        = account.user_about
-        return render(request,'forms/change_account_info.html',{'form':form,})
+        form = forms.AccountChangeInfoForm(instance=profile)
+        
+    context = {
+        'form': form,
+    }
+    return render(request, 'users/change_account_info.html', {'form':form,})
 
 # ======================================
 

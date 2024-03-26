@@ -89,43 +89,32 @@ class LoginForm(forms.Form):
 # ======================================
 
 
-class AccountChangeInfoForm(forms.Form):
+class AccountChangeInfoForm(forms.ModelForm):
 
-    Choices = {
-        ('male','Male'),
-        ('female','Female'),
-        ('others','Others'),
-    }
-    
-    # -----------------------------------
-    user_id         = forms.IntegerField(label='id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
-    # -----------------------------------
-    new_username    = forms.CharField(label='username')
-    # -----------------------------------
-    old_password    = forms.CharField(widget=forms.PasswordInput(), label='old password')
-    # -----------------------------------
-    new_password1   = forms.CharField(widget=forms.PasswordInput(), label='new password')
-    # -----------------------------------
-    new_password2   = forms.CharField(widget=forms.PasswordInput(), label='confirm password')
-    # -----------------------------------
-    new_first_name  = forms.CharField(label='first_name')
-    # -----------------------------------
-    new_last_name   = forms.CharField(label='last_name')
-    # -----------------------------------
-    new_gender      = forms.ChoiceField(label='gender' , choices=Choices)
-    # -----------------------------------
-    new_age         = forms.CharField(label='age')
-    # -----------------------------------
-    new_ssn         = forms.CharField(max_length=10,label='ssn')
-    # -----------------------------------
-    new_email       = forms.CharField(label='email',widget=forms.EmailInput())
-    # -----------------------------------
-    new_phone_number= forms.CharField(max_length=11 , label='phone_number')
-    # -----------------------------------
-    new_photo       = forms.ImageField(label='photo' , required=False)
-    # -----------------------------------
-    new_about       = forms.CharField(label='about',widget=forms.Textarea())
-    # -----------------------------------
+    class Meta:
+        model = models.UserProfile
+        fields = ('age', 'about', 'phone_number', 'gender', 'image')
+
+    def __init__(self, *args, **kwargs):
+        super(AccountChangeInfoForm, self).__init__(*args, **kwargs)
+        # Add user-related fields from the User model
+        self.fields['username'] = forms.CharField(label='Username', initial=self.instance.user.username, disabled=True)
+        self.fields['email'] = forms.EmailField(label='Email', initial=self.instance.user.email, disabled=True)
+        self.fields['first_name'] = forms.CharField(label='First Name', initial=self.instance.user.first_name)
+        self.fields['last_name'] = forms.CharField(label='Last Name', initial=self.instance.user.last_name)
+
+    def save(self, commit=True):
+        user_profile = super(AccountChangeInfoForm, self).save(commit=False)
+        # Update user-related fields from the User model
+        user_profile.user.first_name = self.cleaned_data['first_name']
+        user_profile.user.last_name = self.cleaned_data['last_name']
+        if commit:
+            user_profile.save()
+            user_profile.user.save()
+        return user_profile
+        
+
+
 
     def clean_new_username(self):
         username = self.cleaned_data.get('new_username')

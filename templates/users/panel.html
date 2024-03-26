@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-    {{usr.user.username}}
+    {{user.username}}
 {% endblock title %}
 
 
@@ -11,22 +11,22 @@
 {% block content %}
     
     <div class="profile">
-        first name : {{usr.user.first_name}}
+        first name : {{user.first_name}}
         <br>
-        last name  : {{usr.user.last_name}}
+        last name  : {{user.last_name}}
         <br>
-        age : {{usr.user_age}}
+        age : {{profile.age}}
         <br>
-        phone number : {{usr.user_phone_number}}
+        phone number : {{profile.phone_number}}
         <br>
-        ssn : {{usr.user_ssn}}
+        ssn : {{profile.ssn}}
         <br>
-        about : {{usr.user_about}}
+        about : {{profile.about}}
         <br>
-        email : {{usr.user.email}}
+        email : {{user.email}}
         <br>
-        {% if usr.user_photo %}
-             photo : <img src="{{usr.user_photo.url}}" onclick="showOriginal(this)" alt="profile photo" width="150px" height="170px" >
+        {% if profile.photo %}
+             photo : <img src="{{profile.photo.url}}" onclick="showOriginal(this)" alt="profile photo" width="150px" height="170px" >
         {% else %}
             photo : There is no photo
         {% endif %}
@@ -36,8 +36,8 @@
     <div id="mask" onclick="hideImg()"></div>
 
     <div class="editOptions">
-        <a href="{{usr.get_panel_url}}/change-info">Edit</a> | 
-        <a href="{{usr.get_panel_url}}/delete-user">Delete</a>
+        <a href="{{profile.get_panel_edit_url}}">Edit</a> | 
+        <a href="{{profile.get_panel_delete_url}}/delete-user">Delete</a>
     </div>
 
 

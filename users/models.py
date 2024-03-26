@@ -42,8 +42,18 @@ class UserProfile(models.Model):
     
 
     def get_panel_url(self):
-        return reverse('messenger:panel',args=[self.user.username])
+        return reverse('users:panel', kwargs={'username': self.user.username,})
 
+    # -----------------------------------
+    
+    def get_panel_edit_url(self):
+        return reverse('users:panel-edit' ,)
+    
+    # -----------------------------------
+    
+    def get_panel_delete_url(self):
+        return reverse('users:panel-delete',)
+    
     # -----------------------------------
     
     @property
@@ -53,17 +63,17 @@ class UserProfile(models.Model):
     # -----------------------------------
 
     def get_contacts_url(self):
-        return reverse('messenger:contacts',args=[self.user.username])
+        return reverse('messenger:contacts',kwargs={'username': self.user.username,})
 
     # -----------------------------------
 
     def get_add_contact_url(self):
-        return reverse('messenger:add_contact',args=[self.user.username])
+        return reverse('messenger:add_contact',kwargs={'username': self.user.username,})
 
     # -----------------------------------
 
     def get_chat_page(self):
-        return reverse('messenger:contact_chat',args=[self.user.id])
+        return reverse('messenger:contact_chat',kwargs={self.user.id,})
 
     # -----------------------------------
 
