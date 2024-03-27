@@ -120,22 +120,28 @@ def panel_view(request, username = None):
 @login_required(login_url='users:login')
 @decorators.profile_required
 def change_account_info_view(request):
-    profile = models.UserProfile.objects.get(user__exact = request.user)
+    user_profile = models.UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
-        form = forms.AccountChangeInfoForm(request.POST,request.FILES, instance=profile)
-        if form.is_valid():    
-            updated_profile = form.save()
-            messages.success(request,'updated successfully')
-            return redirect(profile.get_panel_url())  
+        account_form = forms.AccountChangeForm(request.POST, instance=request.user)
+        profile_form = forms.ProfileChangeForm(request.POST, request.FILES, instance=user_profile)
+        if account_form.is_valid() and profile_form.is_valid():
+            updated_account = account_form.save()
+            updated_profile = profile_form.save()
+            messages.success(request, 'Updated successfully')
+            return redirect(user_profile.get_panel_url())
         else:
-            messages.error(request,'form is not valid')
+            print(f'account form errors : {account_form.errors.as_data()}')
+            print(f'profile form errors : {profile_form.errors.as_data()}')
+            messages.error(request, 'Form is not valid')
     else:
-        form = forms.AccountChangeInfoForm(instance=profile)
+        account_form = forms.AccountChangeForm(instance=request.user)
+        profile_form = forms.ProfileChangeForm(instance=user_profile)
         
     context = {
-        'form': form,
+        'account_form': account_form,
+        'profile_form': profile_form,
     }
-    return render(request, 'users/change_account_info.html', {'form':form,})
+    return render(request, 'users/change_account_info.html', context)
 
 # ======================================
 

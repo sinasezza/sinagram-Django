@@ -87,61 +87,45 @@ class LoginForm(forms.Form):
 
 
 # ======================================
+
+
+class AccountChangeForm(forms.ModelForm):
+    username = forms.CharField(label='Username', disabled=True)    
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name',)
+
+
+    def clean(self):
+        cleaned_data = super().clean()        
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+                
+        if User.objects.filter(username=username).exclude(id=self.instance.id).exists():
+            raise forms.ValidationError('This username is already exist, enter another')
+    
+        if User.objects.filter(email=email).exclude(id=self.instance.id).exists():
+            raise forms.ValidationError('This email is already used, please enter another email')
+    
+
 # ======================================
 
+class ProfileChangeForm(forms.ModelForm):
+    phone_number = PhoneNumberField(max_length=13, label='Phone Number', widget=forms.TextInput(attrs={'placeholder': 'Required'}))
 
-class AccountChangeInfoForm(forms.ModelForm):
-
-    # phone_number = PhoneNumberField(max_length=13, label='phone number', widget=forms.TextInput(attrs={'placeholder':'required'}))
-
-    
     class Meta:
         model = models.UserProfile
         fields = ('age', 'about', 'phone_number', 'gender', 'image')
 
-    def __init__(self, *args, **kwargs):
-        super(AccountChangeInfoForm, self).__init__(*args, **kwargs)
-        # Add user-related fields from the User model
-        self.fields['username'] = forms.CharField(label='Username', initial=self.instance.user.username, disabled=True,)
-        self.fields['email'] = forms.EmailField(label='Email', initial=self.instance.user.email)
-        self.fields['first_name'] = forms.CharField(label='First Name', initial=self.instance.user.first_name)
-        self.fields['last_name'] = forms.CharField(label='Last Name', initial=self.instance.user.last_name)
-
-    def save(self, commit=True):
-        user_profile = super(AccountChangeInfoForm, self).save(commit=False)
-        # Update user-related fields from the User model
-        user_profile.user.first_name = self.cleaned_data['first_name']
-        user_profile.user.last_name = self.cleaned_data['last_name']
-        if commit:
-            user_profile.save()
-            user_profile.user.save()
-        return user_profile
-        
-
-    def clan(self):
-        cleaned_data = self.cleaned_data 
-        username = cleaned_data.get('username')
-        prev_id = cleaned_data.get('prev_id')
-        email = cleaned_data.get('email')
+    def clean(self):
+        cleaned_data = super().clean()
         phone_num = cleaned_data.get('phone_number')
-        
-        print(f"username is {username}")
-        print(f"prev_id is {prev_id}")
-        print(f'email is {email}')
-        print(f'phone number is {phone_num}')
 
-        if User.objects.filter(username=username).exclude(id__exact=prev_id).exists():
-            raise forms.ValidationError('this username is already exist , enter another')
+        if models.UserProfile.objects.filter(phone_number=phone_num).exclude(id=self.instance.id).exists():
+            raise forms.ValidationError('The phone number entered already exists, enter another')
 
-        if User.objects.filter(email=email).exclude(user_id=prev_id).exists():
-            raise forms.ValidationError('this email is already used , please enter another email')
-
-        if models.UserProfile.objects.filter(phone_number=phone_num).exclude(user_id=prev_id).exists():
-            raise forms.ValidationError('the phone number entered is exists , enter another')
-
-        return cleaned_data        
-    # -----------------------------------
-
+        return cleaned_data
 
 # ======================================
 
