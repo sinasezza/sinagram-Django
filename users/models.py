@@ -62,16 +62,6 @@ class UserProfile(models.Model):
 
     # -----------------------------------
 
-    def get_contacts_url(self):
-        return reverse('messenger:contacts',kwargs={'username': self.user.username,})
-
-    # -----------------------------------
-
-    def get_add_contact_url(self):
-        return reverse('messenger:add_contact',kwargs={'username': self.user.username,})
-
-    # -----------------------------------
-
     def get_chat_page(self):
         return reverse('messenger:contact_chat',kwargs={self.user.id,})
 
@@ -88,18 +78,25 @@ class Contact(models.Model):
     # -----------------------------------
     email = models.EmailField(max_length=100, blank=True, null=True)
     # -----------------------------------
-    phone = PhoneNumberField() 
+    phone = PhoneNumberField(max_length=13) 
     # -----------------------------------
     contact_saver = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='my_contacts', blank=True, null=True)
     # -----------------------------------
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
     # -----------------------------------
+    image = models.ImageField(upload_to='contacts/', null=True, blank=True)
 
     class Meta:
         ordering = ['fname']
+    
+    
+    def get_absolute_url(self):
+        return reverse("users:contact-detail", kwargs={"id": self.id})
+    
 
     def __str__(self):
-        return f""
+        return f"{self.full_name} - {self.phone} - {self.email}"
+    
     
     @property
     def full_name(self):

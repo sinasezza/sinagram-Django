@@ -9,4 +9,4 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(models.Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('contact_saver', 'profile', 'full_name', 'phone',)
+    list_display = ('id', 'contact_saver', 'profile', 'full_name', 'phone',)

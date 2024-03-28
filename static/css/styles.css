@@ -1,23 +1,3 @@
-/* ------------------------- */
-#add_contact_form {
-  text-align: left;
-  background-color: blanchedalmond;
-  text-shadow: 10px;
-  font-size: 20px;
-}
-/* ------------------------- */
-#add_contact_form label {
-  width: 250px;
-  height: 50px;
-  display: inline-block;
-}
-/* ------------------------- */
-#add_contact_form .submit_btn {
-  margin-left: 5px;
-  width: 150px;
-  font-size: 30px;
-}
-
 #_messages {
   overflow-y: auto;
   overflow-x: hidden;
@@ -137,41 +117,12 @@
   border: 4px dashed beige;
 }
 /* ------------------------- */
-#edit_contact_form #submit_btn {
-  font-size: 60px;
-  background-color: cornflowerblue;
-  color: white;
-}
-/* ------------------------- */
-#edit_contact_form #submit_btn:hover {
-  cursor: pointer;
-}
-/* ------------------------- */
 #edit_contact_form p label {
   margin: 10px;
 }
 /* ------------------------- */
 #edit_contact_form p input {
   margin-left: 20px;
-}
-/* ------------------------- */
-#contact_list {
-  background-color: lavenderblush;
-  left: 45px;
-  font-size: 50px;
-  padding: 10px;
-}
-/* ------------------------- */
-#contact_list ul {
-  list-style-type: decimal;
-  border: 4px double black;
-  margin: 15px;
-  padding: 5px;
-}
-/* ------------------------- */
-#contact_list ul li {
-  border-bottom: 2px solid blue;
-  margin-left: 50px;
 }
 /* ------------------------- */
 .profile {
@@ -211,10 +162,4 @@
   cursor: pointer;
 }
 /* ------------------------- */
-#edit_contact_form #submit_btn {
-  width: 250px;
-  border-radius: 30px;
-  margin-left: 20px;
-  margin: 10px;
-}
-/* ------------------------- */
+

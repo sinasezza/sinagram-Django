@@ -38,9 +38,9 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{% url 'users:my-panel' %}">Your Panel</a></li>
-            <li><a class="dropdown-item" href="#">Contacts</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:contact-list' %}">Contacts</a></li>
             <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a></li>
           </ul>
         </li>
         {% endif %}

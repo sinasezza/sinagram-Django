@@ -1,46 +1,71 @@
-{% extends "base/base.html" %}
+{% extends "base/base.html" %} 
+{% load crispy_forms_tags %} 
 
-
-{% block title %}
-    {{usr.user.username}} | ADD Contact
-{% endblock title %}
-
-
-
-{% comment %} ------------------------------------- {% endcomment %}
-
+{% block title %}{{usr.user.username}} | ADD Contact{% endblock title %} 
 
 {% block content %}
-
+  <div class="container">
+    <h1 class="mt-4">Add Contact</h1>
     <div id="add_contact_form">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="first_name" class="form-label">{{form.fname.label}}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="first_name"
+            name="fname"
+            maxlength="20"
+            autofocus
+            required
+          />
+        </div>
 
-        <form method='POST'>
-            {% csrf_token %}
-            
-            <div>
-                <label>{{form.first_name.label}} : </label>
-                {{form.first_name}}
-            </div>
+        <div class="mb-3">
+          <label for="last_name" class="form-label">{{form.lname.label}}</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="last_name" 
+            name="lname" 
+            maxlength="20"
+          />
+        </div>
 
-            <div>
-                <label>{{form.last_name.label}} : </label>
-                {{form.last_name}}
-            </div>
+        <div class="mb-3">
+          <label for="phone_number" class="form-label"
+            >{{form.phone.label}}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="phone_number"
+            name="phone"
+            placeholder="Required"
+            maxlength="13"
+            required
+          />
+        </div>
 
-            <div>
-                <label>{{form.phone_number.label}} :</label> 
-                {{form.phone_number}}
-            </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">{{form.email.label}}</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            maxlength="100"
+          />
+        </div>
 
-            <div>
-                <label>{{form.email.label}} :</label> 
-                {{form.email}}
-            </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">{{form.image.label}}</label>
+          <input type="file" class="form-control" id="image" name="image" />
+        </div>
 
-
-            <button type="submit" class="submit_btn"> SAVE </button>
-        </form>
-
+        <button type="submit" class="btn btn-primary">SAVE</button>
+      </form>
     </div>
-
+  </div>
 {% endblock content %}

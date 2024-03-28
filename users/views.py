@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+from django.db.models import Q
 from . import models, forms, decorators
 
 
@@ -175,21 +176,22 @@ def delete_user_view(request,username):
 
 @login_required(login_url= 'users:login')
 @decorators.profile_required
-def contact_list_view(request,username):
-    usr = models.Account.objects.get(user__exact = request.user)
-    contacts = models.Contact.objects.filter(Account_id__exact = request.user.id)
+def contact_list_view(request):
+    profile = models.UserProfile.objects.get(user=request.user)
+    contacts = profile.my_contacts.all()
     context = {
+        'profile': profile,
         'contacts':contacts,
-        'usr':usr,
     }
-    return render(request,'messenger_pages/contact_list.html',context)
+    return render(request,'users/contact_list.html',context)
  
 # ======================================
 
 @login_required(login_url='users:login')
 @decorators.profile_required
-def contact_detail_view(request,username,name,id):
-    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+def contact_detail_view(request, id):
+    contact = get_object_or_404(models.Contact, id=id)
+    
     try:
         contact_account = models.Account.objects.get(user_phone_number__exact = contact.phone_number)
         context = {
@@ -203,35 +205,42 @@ def contact_detail_view(request,username,name,id):
         }
         
     
-    return render(request,'messenger_pages/contact_detail.html',context) 
+    return render(request,'users/contact_detail.html',context) 
         
 # ======================================
 
 @login_required(login_url= 'users:login')
 @decorators.profile_required
-def add_contact_view(request,username):
-    
-    usr = models.Account.objects.get(user__exact = request.user)
+def add_contact_view(request):
+    profile = models.UserProfile.objects.get(user__exact = request.user)
     if request.method == 'POST':
-        form = forms.AddContactForm(request.POST)
+        form = forms.AddContactForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            cd = form.cleaned_data
-            contact = models.Contact.objects.create( Account=usr,
-                                                     fname=cd.get('first_name'),
-                                                     lname=cd.get('last_name'),
-                                                     phone_number=cd.get('phone_number'),
-                                                     email = cd.get('email'))
+            contact = form.save(commit=False)
+            contact.contact_saver = profile
+
+            # assign profile to contact if exist
+            try:
+                contact_profile = models.UserProfile.objects.get(Q(phone=contact.phone) | Q(email=contact.email))
+                contact.profile = contact_profile
+            except:
+                pass
+            
+            
             contact.save()
             messages.success(request,'the contact added successfully')
-            return redirect(usr.get_contacts_url())
+            return redirect('users:contact-list')
         else:
             messages.error(request,'the form is invalid')
-            return render(request,'forms/add_contact_page.html',{'form':form,'usr':usr,})
     else:
         form = forms.AddContactForm()
-        form.fields['account_id'].initial = request.user.id
+    
+    context = {
+        'form': form,
+        'profile': profile,
+    }
         
-    return render(request,'forms/add_contact_page.html',{'form':form,'usr':usr,})
+    return render(request, 'users/add_contact_page.html', context)
 
 # ======================================
 

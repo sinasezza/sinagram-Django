@@ -146,26 +146,26 @@ class LogoutForm(forms.Form):
 # ======================================
 
 
-class AddContactForm(forms.Form):
+class AddContactForm(forms.ModelForm):
 
-    account_id         = forms.IntegerField(label='account id',widget=forms.HiddenInput(attrs={'readonly':True,}),required=False)
-    # -----------------------------------
-    first_name      = forms.CharField(label='first name (Required)',max_length=20,widget=forms.TextInput(attrs={'autofocus':True}),)
-    # -----------------------------------
-    last_name       = forms.CharField(label='last name',max_length=30,required=False)
-    # -----------------------------------
-    phone_number    = forms.CharField(label='phone number (Required)',max_length=11)
-    # -----------------------------------
-    email           = forms.CharField(label='email',widget=forms.EmailInput(),required=False)
-    # -----------------------------------
+    fname      = forms.CharField(label='first name (Required)', max_length=20, widget=forms.TextInput(attrs={'autofocus':True}),)
+    lname       = forms.CharField(label='last name', max_length=30, required=False)
+    phone = PhoneNumberField(max_length=13, label='Phone Number (Required)', widget=forms.TextInput(attrs={'placeholder': 'Required'}))
+    email           = forms.CharField(label='email' ,widget=forms.EmailInput(), required=False)
+    image = forms.ImageField(label='image',  required=False)
+    
+    class Meta:
+        model = models.Contact
+        fields = ('fname', 'lname', 'phone', 'email', 'image',)
+    
 
-    def clean_phone_number(self):
-        number = self.cleaned_data.get('phone_number')
-        account_id   = self.cleaned_data.get('account_id')
-        for contact in models.Contact.objects.filter(Account_id__exact = account_id):
-            if contact.phone_number == number:
-                raise forms.ValidationError('this phone number registered before , please check that OR enter another phone number')
-        return number
+    # def clean_phone_number(self):
+    #     number = self.cleaned_data.get('phone_number')
+    #     account_id   = self.cleaned_data.get('account_id')
+    #     for contact in models.Contact.objects.filter(Account_id__exact = account_id):
+    #         if contact.phone_number == number:
+    #             raise forms.ValidationError('this phone number registered before , please check that OR enter another phone number')
+    #     return number
 
 
 # ======================================
