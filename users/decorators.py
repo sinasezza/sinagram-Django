@@ -22,3 +22,11 @@ def profile_required(view_func):
         return view_func(request, *args, **kwargs)
     
     return _wrapped_view
+
+def contact_saver_required(view_func, *args, **kwargs):
+    def _wrapped_view(request, *args, **kwargs):
+        # id = 
+        # profile = request.user.profile
+        return view_func(request, *args, **kwargs)
+    
+    return _wrapped_view

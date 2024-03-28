@@ -1,35 +1,43 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-    {{contact}} | Contacts 
+    {{ contact.fname }} | Contacts 
 {% endblock title %}
 
-
-{% comment %} ------------------------------------- {% endcomment %}
-
-
 {% block content %}
+<div class="container">
+  <div id="contact_detail" class="mt-4">
+    <h3>Contact Details</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>First Name:</strong> {{ contact.fname }}</p>
+        <p><strong>Last Name:</strong> {{ contact.lname }}</p>
+        <p><strong>Phone Number:</strong> {{ contact.phone }}</p>
+        <p><strong>Email:</strong> {{ contact.email }}</p>
+        <p>
+          <strong>Image:</strong> 
+          {% if contact.image %}
+            <img src="{{ contact.image.url }}" alt="Contact Image" class="img-fluid">
+          {% else %}
+            No Image Available
+          {% endif %}
+        </p>
+      </div>
 
-    <div id='contact_detail'>
-
-        first name      : {{contact.fname}}
-        <br><br>
-        last name       : {{contact.lame}}
-        <br><br>
-        phone number    : {{contact.phone_number}}
-        <br><br>
-        email           : {{contact.email}}
-        <br><br>
-
-        {% if account %}
-            <h2> <a href="{{account.get_chat_page}}"> <button> Send Message </button> </a> </h2>
-        {% endif %}
+      {% if contact.profile %}
+        <div class="col-md-6">
+            <h3 class="mt-4">Send Message</h3>
+            <a href="#"><button class="btn btn-primary">Send Message</button></a>
+        </div>
+      {% endif %}
     </div>
+  </div>
 
-    <hr><hr>
-    <div class="editOptions">
-        <a href="{{contact.get_contact_url}}change-info">Edit</a> |
-        <a href="{{contact.get_contact_url}}delete-contact">Delete</a> 
-    <div>
+  <hr class="mt-4">
 
+  <div class="editOptions">
+    <a href="{{ contact.get_edit_url }}" class="btn btn-info">Edit</a>
+    <a href="{{ contact.get_delete_url }}" class="btn btn-danger">Delete</a>
+  </div>
+</div>
 {% endblock content %}

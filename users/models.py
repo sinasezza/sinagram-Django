@@ -27,7 +27,7 @@ class UserProfile(models.Model):
     
     id = models.CharField(max_length=settings.DEFAULT_ID_LENGTH, primary_key=True, default=prj_utils.id_gen, editable=False)
     # -----------------------------------
-    user = models.OneToOneField(to=User ,on_delete=models.CASCADE)
+    user = models.OneToOneField(to=User ,on_delete=models.CASCADE, related_name='profile')
     # -----------------------------------
     age           = models.CharField(max_length=2, null=True, blank=True, default='0')
     # -----------------------------
@@ -93,6 +93,11 @@ class Contact(models.Model):
     def get_absolute_url(self):
         return reverse("users:contact-detail", kwargs={"id": self.id})
     
+    def get_edit_url(self):
+        return reverse('users:contact-update', kwargs={'id': self.id,})
+    
+    def get_delete_url(self):
+        return reverse('users:contact-delete', kwargs={'id': self.id,})
 
     def __str__(self):
         return f"{self.full_name} - {self.phone} - {self.email}"

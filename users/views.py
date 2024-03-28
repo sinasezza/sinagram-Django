@@ -214,7 +214,7 @@ def contact_detail_view(request, id):
 def add_contact_view(request):
     profile = models.UserProfile.objects.get(user__exact = request.user)
     if request.method == 'POST':
-        form = forms.AddContactForm(data=request.POST, files=request.FILES)
+        form = forms.ContactAddForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             contact = form.save(commit=False)
             contact.contact_saver = profile
@@ -226,14 +226,14 @@ def add_contact_view(request):
             except:
                 pass
             
-            
             contact.save()
             messages.success(request,'the contact added successfully')
             return redirect('users:contact-list')
         else:
+            print(f"form errors : {form.errors.as_data()}")
             messages.error(request,'the form is invalid')
     else:
-        form = forms.AddContactForm()
+        form = forms.ContactAddForm()
     
     context = {
         'form': form,
@@ -246,66 +246,61 @@ def add_contact_view(request):
 
 @login_required(login_url= 'users:login')
 @decorators.profile_required
-def change_contact_info_view(request,username,name,id):
-    usr = models.Account.objects.get(user__exact =request.user)
-    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+@decorators.contact_saver_required
+def change_contact_info_view(request, id):
+    contact = get_object_or_404(models.Contact, id=id)
+
     if request.method == 'POST':
-        form = forms.ContactChangeInfo(request.POST)
+        form = forms.ContactUpdateForm(data=request.POST, files=request.FILES, instance=contact)
         if form.is_valid():
-            cd = form.cleaned_data
-            contact.fname = cd.get('fname')
-            contact.lname  = cd.get('lname')
-            contact.phone_number = cd.get('phone_number')
-            contact.email = cd.get('email')
-            contact.save()
-            messages.success(request,'the contact Informations Updated')
-            return redirect(contact.get_contact_url())
+            updated_contact = form.save()
+
+            # assign profile to contact if exist
+            contact_profile = models.UserProfile.objects.filter(Q(phone_number=updated_contact.phone)).distinct()
+            if contact_profile.exists():
+                updated_contact.profile = contact_profile.first()
+                updated_contact.save()
+            
+            messages.success(request,'the contact Information Updated')
+            return redirect(updated_contact.get_absolute_url())
         else :
-            messages.error(request,'the form is not valid')
-            return render(request,'forms/change_contact_info.html',{'form':form,'usr':usr,'contact':contact,})        
+            print(f"form error : {form.errors.as_data()}")
+            messages.error(request,'the form is not valid')      
     else:
-        form = forms.ContactChangeInfo()
-        form.fields['user_id'].initial = request.user.id
-        form.fields['contact_id'].initial = id
-        form.fields['fname'].initial = contact.fname
-        form.fields['lname'].initial = contact.lname
-        form.fields['phone_number'].initial = contact.phone_number
-        form.fields['email'].initial = contact.email
+        form = forms.ContactUpdateForm(instance=contact)
+        
+    print(f"form is {form}")
+
     
     context = {
         'form':form,
-        'usr':usr,
-        'contact':contact,
+        'contact': contact,
     }
-    return render(request,'forms/change_contact_info.html',context)
+    return render(request=request, template_name='users/change_contact_info.html', context=context)
 
 # ======================================
 
 @login_required(login_url= 'users:login')
 @decorators.profile_required
-def delete_contact_view(request,username,name,id):
-    usr = models.Account.objects.get(user__exact =request.user)
-    contact = models.Contact.objects.get(Account_id__exact= request.user.id , id__exact=id)
+def delete_contact_view(request, id):
+    contact = get_object_or_404(models.Contact, id=id)
+    
     if request.method == 'POST':
         form = forms.DeleteContactForm(request.POST)
         if form.is_valid():
-            print('\nvalue is : {}\n'.format(form.cleaned_data.get('yes')))
             if form.cleaned_data.get('yes') == '1':
                 contact.delete()
                 messages.success(request,'the contact deleted ...')
-                return redirect(usr.get_contacts_url())
+                return redirect('users:contact-list')
             else:
                 messages.error(request,'the contact deletion failed , try again')
-                return render(request,'forms/delete_contact_form.html',{'form':form,'usr':usr,})
         else :
             messages.error(request,'the form is not valid')
-            return render(request,'forms/delete_contact_form.html',{'form':form,'usr':usr,'contact':contact,})        
     else:
         form = forms.DeleteContactForm()
     
     context = {
         'form':form,
-        'usr':usr,
         'contact':contact,
     }
-    return render(request,'forms/delete_contact_form.html',context)
+    return render(request, 'users/delete_contact_form.html', context)

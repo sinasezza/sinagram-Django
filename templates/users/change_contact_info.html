@@ -1,19 +1,104 @@
-{% extends "base/base.html" %}
+{% extends "base/base.html" %} 
+{% load crispy_forms_tags %} 
 
-{% block title %}
-    Change info | {{contact.fullname}}
-{% endblock title %}
-
-
-{% comment %} ------------------------------------- {% endcomment %}
-
+{% block title %}{{usr.user.username}} | Update Contact{% endblock title %} 
 
 {% block content %}
-
-    <form method='POST' id='edit_contact_form'>
+  <div class="container">
+    <h1 class="mt-4">Add Contact</h1>
+    <div id="">
+      <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type='submit' value='UPDATE' id='submit_btn'>
-    </form>
+        <div class="mb-3">
+          <label for="first_name" class="form-label">{{form.fname.label}}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="first_name"
+            name="fname"
+            maxlength="20"
+            autofocus
+            required
+            value="{% if form.fname.value %}{{form.fname.value}}{% endif %}"
+          />
 
+          <div id="first_name-errors">
+            {% for error in form.fname.errors %}
+              <p class="fs-6 fst-italic text-danger">*{{error}}</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="last_name" class="form-label">{{form.lname.label}}</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="last_name" 
+            name="lname" 
+            maxlength="20"
+            value="{% if form.lname.value %}{{form.lname.value}} {% endif %}"
+          />
+          
+          <div id="last_name-errors">
+            {% for error in form.lname.errors %}
+              <p class="fs-6 fst-italic text-danger">*{{error}}</p>
+            {% endfor %}
+          </div>
+
+        </div>
+    
+
+
+        <div class="mb-3">
+          <label for="phone_number" class="form-label"
+            >{{form.phone.label}}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="phone_number"
+            name="phone"
+            placeholder="Required"
+            maxlength="13"
+            required
+            value="{% if form.phone.value %}{{form.phone.value}}{% endif %}"
+            />
+
+            <div id="phone_number-errors">
+              {% for error in form.phone.errors %}
+                <p class="fs-6 fst-italic text-danger">*{{error}}</p>
+              {% endfor %}
+            </div>
+        </div>
+    
+
+        <div class="mb-3">
+          <label for="email" class="form-label">{{form.email.label}}</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            maxlength="100"
+            value="{% if form.email.value %}{{form.email.value}}{% endif %}"
+          />
+        
+          <div id="email-errors">
+            {% for error in form.email.errors %}
+              <p class="fs-6 fst-italic text-danger">*{{error}}</p>
+            {% endfor %}
+          </div>
+
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label">{{form.image.label}}</label>
+          {{form.image}}
+        </div>
+
+        <button type="submit" class="btn btn-primary">SAVE</button>
+      </form>
+    </div>
+  </div>
 {% endblock content %}
