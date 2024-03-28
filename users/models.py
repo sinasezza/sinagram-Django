@@ -62,11 +62,6 @@ class UserProfile(models.Model):
 
     # -----------------------------------
 
-    def get_chat_page(self):
-        return reverse('messenger:contact_chat',kwargs={self.user.id,})
-
-    # -----------------------------------
-
     def __str__(self):
         return self.user.username
 
@@ -98,6 +93,10 @@ class Contact(models.Model):
     
     def get_delete_url(self):
         return reverse('users:contact-delete', kwargs={'id': self.id,})
+    
+    def get_chat_url(self):
+        return reverse('messenger:contact-chat', kwargs={'id': self.profile.id,})
+
 
     def __str__(self):
         return f"{self.full_name} - {self.phone} - {self.email}"

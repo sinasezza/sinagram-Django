@@ -1,15 +1,20 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-  {{usr.user.username}} | Contacts
+  {{ usr.user.username }} | Contacts
 {% endblock title %}
 
 {% block content %}
 <div class="container">
   <h3 class="text-center mt-4">CONTACTS</h3>
-  <div id="contact_list" class="mt-4">
+  
+  <div class="mt-4">
+    <input type="search" name="search-bar" id="search-bar" class="form-control" placeholder="Search contacts...">
+  </div>
+  
+  <div class="mt-4">
     {% if contacts.exists %}
-      <ul class="list-group">
+      <ul id="contact-list" class="list-group">
         {% for contact in contacts %}
           <li class="list-group-item">
             <div class="row align-items-center">
@@ -17,7 +22,7 @@
                 <img src="{% if contact.image %} {{ contact.image.url }} {% endif %}" alt="{{ contact.full_name }}" class="img-thumbnail" style="max-width: 100px;">
               </div>
               <div class="col">
-                <a href="{{contact.get_absolute_url}}" class="text-decoration-none">{{contact.full_name}}</a>
+                <a href="{{ contact.get_absolute_url }}" class="text-decoration-none">{{ contact.full_name }}</a>
                 <p class="mb-0">{{ contact.phone_number }}</p>
               </div>
             </div>
@@ -33,3 +38,16 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block custom_js %}
+  <script>
+    $(document).ready(function () {
+      $("#search-bar").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#contact-list li").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+  </script>
+{% endblock custom_js %}

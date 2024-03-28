@@ -8,36 +8,28 @@ from django.http import JsonResponse
 from django.core import serializers
 import json
 from django.forms.models import model_to_dict
-
+from users import decorators as users_decorators
+from users import models as users_models
 from . import models,forms
 
 
 
 # ======================================
 
-@login_required(login_url= 'messenger:login')
-def contact_chat_view(request,id):
-    sender = models.Account.objects.get(id__exact = request.user.id)
-    receiver = models.Account.objects.get(id__exact = id)
-
-    if request.method == 'POST':
-        form = forms.SendMessageForm(request.POST,request.FILES)
-        if form.is_valid():
-            cd = form.cleaned_data
-            message = models.Message.objects.create(  sender=sender ,
-                                            receiver=receiver,
-                                            message=cd['message'],
-                                            content=request.FILES.get('file',False))
-            message.save()
-            return JsonResponse(make_data_message([message,]),safe=False)
-        else:
-            messages.error(request,'form is not valid')
-
-    else :
-            form = forms.SendMessageForm()
-            form.fields['sender_id'].initial = sender.id
-            form.fields['receiver_id'].initial = receiver.id
-            return render(request,'messenger_pages/contact_chat_page.html',context={'form':form,})
+@login_required(login_url='messenger:login')
+@users_decorators.profile_required
+def contact_chat_view(request, id: str):
+    print(f'id is {id}')
+    sender = request.user.profile
+    receiver = get_object_or_404(users_models.UserProfile, id=id)
+    form = forms.SendMessageForm()
+    
+    context = {
+        'form': form,
+        'sender': sender,
+        'receiver': receiver,
+    }
+    return render(request, 'messenger/contact_chat_page.html', context)
 
 # =====================================
 
