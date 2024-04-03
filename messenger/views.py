@@ -36,6 +36,7 @@ def get_or_create_room(request, receiver_id: str):
 @users_decorators.profile_required
 def contact_chat_view(request, room_id: str):
     room = get_object_or_404(models.PrivateRoom, id=room_id)
+    room_messages = room.private_messages.all()
 
     form = forms.SendMessageForm()
     
@@ -44,6 +45,7 @@ def contact_chat_view(request, room_id: str):
         'room': room,
         'sender': room.user1,
         'receiver': room.user2,
+        'room_messages': room_messages,
     }
     return render(request, 'messenger/contact_chat_page.html', context)
 
