@@ -95,7 +95,7 @@ class Contact(models.Model):
         return reverse('users:contact-delete', kwargs={'id': self.id,})
     
     def get_chat_url(self):
-        return reverse('messenger:contact-chat', kwargs={'id': self.profile.id,})
+        return reverse('messenger:get-or-create-room', kwargs={'receiver_id': self.profile.id,})
 
 
     def __str__(self):

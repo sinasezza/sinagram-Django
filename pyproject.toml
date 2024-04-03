@@ -31,6 +31,7 @@ django-browser-reload = "^1.12.1"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.3.0"}
 crispy-bootstrap5 = "^2024.2"
 django-crispy-forms = "^2.1"
+ruff = "^0.3.5"
 
 
 [build-system]

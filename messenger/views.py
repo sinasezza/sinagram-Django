@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.core import serializers
+from django.db.models import Q
 import json
 from django.forms.models import model_to_dict
 from users import decorators as users_decorators
@@ -14,20 +15,35 @@ from . import models,forms
 
 
 
+@login_required(login_url='messenger:login')
+@users_decorators.profile_required
+def get_or_create_room(request, receiver_id: str):
+    sender = request.user.profile
+    receiver = get_object_or_404(users_models.UserProfile, id=receiver_id)
+    
+    rooms = models.PrivateRoom.objects.filter((Q(user1=sender)  & Q(user2=receiver)) |  (Q(user1=receiver) & Q(user2=sender)))
+    
+    if rooms.exists():
+        room = rooms.first()
+    else:
+        room = models.PrivateRoom.objects.create(user1=sender, user2=receiver)
+    
+    return redirect(room.get_room_url())
+
 # ======================================
 
 @login_required(login_url='messenger:login')
 @users_decorators.profile_required
-def contact_chat_view(request, id: str):
-    print(f'id is {id}')
-    sender = request.user.profile
-    receiver = get_object_or_404(users_models.UserProfile, id=id)
+def contact_chat_view(request, room_id: str):
+    room = get_object_or_404(models.PrivateRoom, id=room_id)
+
     form = forms.SendMessageForm()
     
     context = {
         'form': form,
-        'sender': sender,
-        'receiver': receiver,
+        'room': room,
+        'sender': room.user1,
+        'receiver': room.user2,
     }
     return render(request, 'messenger/contact_chat_page.html', context)
 
